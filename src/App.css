@@ -1,0 +1,7 @@
+.logo-img{
+  opacity: .5;
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%,-50%);
+}
