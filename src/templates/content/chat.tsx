@@ -7,7 +7,9 @@ import React from "react"
 const Pagina_de_chat = () => {
   return (
     <React.Fragment>
-      <MyContainer sx={{
+      <MyContainer 
+      maxWidth={'md'}
+      sx={{
         height: '100%',
         paddingBottom: '24px',
         position: 'relative',
@@ -26,6 +28,7 @@ const Pagina_de_chat = () => {
         display={'flex'}
         flexDirection={'row'}
         justifyContent={"center"}
+        gap={'16px'}
         alignItems={"center"}
         sx={{padding: '24px'}}
       >
@@ -34,14 +37,15 @@ const Pagina_de_chat = () => {
           maxWidth: 600,
           maxHeight: 50,
           minHeight: 50,
+          fontSize: '20px',
           backgroundColor: "#e9e9e9",
           color: 'black',
           borderColor: '#cfccccff'
           }}
         />
-        <Box>
-          <Button><SendIcon /></Button>
-          <Button><MicIcon /></Button>
+        <Box display={"flex"} justifyContent={"center"} height={'100%'}  gap={'16px'}>
+          <Button variant="outlined"><SendIcon /></Button>
+          <Button variant="outlined"><MicIcon /></Button>
         </Box>
       </Box>
     </React.Fragment>

@@ -46,7 +46,9 @@ const Inicio = () => {
             configMicrocontrolador: false
           })
         }}><SettingsIcon sx={{fontSize: '40px'}} /></MenuItem>
-        <MenuItem sx={{':hover':{
+        <MenuItem onClick={() => {
+          setEInicio(true)
+        }} sx={{':hover':{
           background: 'none'
         }, ':onclick': {
           background: 'none'
