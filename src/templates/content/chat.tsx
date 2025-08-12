@@ -1,8 +1,9 @@
 import { Box, Button, TextareaAutosize } from "@mui/material";
-import MyContainer from "../MyContainer"
+import MyContainer from "../MyContainer";
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 import React from "react"
+import MsgChatSistema from "./chat/MsgChatSistema";
 
 const Pagina_de_chat = () => {
   return (
@@ -15,14 +16,12 @@ const Pagina_de_chat = () => {
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'end',
         alignItems: 'center',
         border: '.5px solid black',
         borderRadius: '16px'
       }}>
-        <div>
-          Deve ficar o chat e a parte inicial da aplicação
-        </div>
+        <MsgChatSistema />
       </MyContainer>
       <Box
         display={'flex'}
