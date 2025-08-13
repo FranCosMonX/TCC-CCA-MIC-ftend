@@ -35,10 +35,10 @@ const Pagina_de_chat = () => {
       sx={{
         maxHeight: '100%',
         paddingBottom: '24px',
+        paddingLeft: '0px',
         position: 'relative',
         border: '.5px solid black',
         borderRadius: '16px',
-        overflow: 'hidden',
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',

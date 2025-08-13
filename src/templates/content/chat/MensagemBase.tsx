@@ -11,7 +11,7 @@ interface MensagemBaseParams {
 const MensagemBase: React.FC<MensagemBaseParams> = ({textAlign, text, sx}) => {
   return (
     <Box
-      width={'100%'}
+      maxWidth={'100%'}
       fontFamily={'Arial'}
       fontSize={"20px"}
       padding={'5px 10px'}

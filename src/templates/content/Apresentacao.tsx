@@ -3,7 +3,7 @@ import MyContainer from "../MyContainer"
 import { Box, Button, TextField, Typography } from "@mui/material"
 
 interface ApresentacaoParams {
-  irParaChat_funcion: () => void
+  irParaChat_funcion: () => void;
 }
 
 const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion}) => {
