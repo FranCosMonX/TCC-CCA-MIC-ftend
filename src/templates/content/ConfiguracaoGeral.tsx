@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Modal, Select, TextField } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import LoopIcon from '@mui/icons-material/Loop';
 import type { SelectChangeEvent } from "@mui/material";
 
@@ -48,11 +48,9 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {
               type="url"
               fullWidth
             />
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id="label-AI">AI utilizada</InputLabel>
+            <FormControl>
+              <Typography>Inteligência Artificial a ser utilizada</Typography>
               <Select
-                labelId="label-AI"
-                label="AI utilizada"
                 value={iasmodels}
                 onChange={handleChangeIasModels}
                 displayEmpty
