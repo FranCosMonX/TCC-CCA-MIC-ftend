@@ -1,9 +1,6 @@
 import { Box, type SxProps, type Theme } from "@mui/material";
 import type React from "react";
-import { createRoot } from "react-dom/client";
 import Markdown from "react-markdown";
-import remarkGfm from 'react-markdown'
-import TextMarkDown from "./TextMarkDown";
 
 interface MensagemBaseParams {
   textAlign: 'center' | 'left' | 'right' | 'end' | 'start' | 'justify';
@@ -21,8 +18,9 @@ const MensagemBase: React.FC<MensagemBaseParams> = ({textAlign, text, sx}) => {
       textAlign={textAlign}
       sx={sx}
     >
-      {/* {text} */}
-      <TextMarkDown />
+      <Markdown >
+        {text}
+      </Markdown>
     </Box>
   )
 }

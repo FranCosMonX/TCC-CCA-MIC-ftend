@@ -1,27 +1,56 @@
-import { Box, Button, TextareaAutosize } from "@mui/material";
+import { Box, Button, List, ListItem, TextareaAutosize } from "@mui/material";
 import MyContainer from "../MyContainer";
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 import React from "react"
 import MsgChatSistema from "./chat/MsgChatSistema";
+import MsgChatUsuario from "./chat/MsjChatUsuario";
+
+interface InterfaceRegistroDeMensagem{
+  entidade: 'usuario' | 'sistema';
+  mensagem: string;
+  index: number;
+}
 
 const Pagina_de_chat = () => {
+  const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([
+    {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 0},
+    {entidade: 'sistema', mensagem: `javascript
+        int setup(){
+              PINMODE();
+        }
+    
+        int loop() {
+        }`, index: 1},
+        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 2},
+        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 3},
+        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 4},
+        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 5},
+  ])
+
   return (
     <React.Fragment>
       <MyContainer 
       maxWidth={'md'}
       sx={{
-        height: '100%',
+        maxHeight: '100%',
         paddingBottom: '24px',
         position: 'relative',
+        border: '.5px solid black',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'end',
-        alignItems: 'center',
-        border: '.5px solid black',
-        borderRadius: '16px'
+        gap: '15px'
       }}>
-        <MsgChatSistema />
+        {mensagens.map((mensagem) => {
+          const retorno = mensagem.entidade === 'sistema' ?
+            <MsgChatSistema key={mensagem.index} text={mensagem.mensagem} /> :
+            <MsgChatUsuario key={mensagem.index} text={mensagem.mensagem} />
+          
+            return retorno;
+        })}
       </MyContainer>
       <Box
         display={'flex'}

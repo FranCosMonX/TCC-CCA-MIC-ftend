@@ -1,22 +1,23 @@
+import React from "react"
 import MensagemBase from "./MensagemBase";
-import React from "react";
 
-interface MsgChatSistemaParams {
+interface MsgChatUsuarioParams {
   text: string;
 }
 
-const MsgChatSistema: React.FC<MsgChatSistemaParams> = ({text}) => {
+const MsgChatUsuario: React.FC<MsgChatUsuarioParams> = ({text}) => {
   return (
     <React.Fragment>
       <MensagemBase textAlign="justify" text={text}
         sx={{
           border: '1px solid darkgray',
           borderBottom: '2px solid darkgray',
-          borderRadius:'5px 20px 20px 5px'
+          borderRadius:'20px 5px 5px 20px',
+          backgroundColor: '#9de3fa49'
         }}
       />
     </React.Fragment>
   )
 }
 
-export default MsgChatSistema;
+export default MsgChatUsuario;
