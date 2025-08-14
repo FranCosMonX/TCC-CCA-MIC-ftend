@@ -8,6 +8,7 @@ import Pagina_de_chat from "../templates/content/chat";
 import Apresentacao from "../templates/content/Apresentacao";
 import ConfiguracaoGeral from "../templates/content/ConfiguracaoGeral";
 import ConfiguracaoMicro from "../templates/content/ConfiguracaoMicro";
+import '../App.css'
 
 const Inicio = () => {
   const [eInicio, setEInicio] = React.useState(true);

@@ -80,10 +80,10 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
               maxHeight={'96px'}
               sx={{'::-webkit-scrollbar': {
                 backgroundColor: '#969696ff',
-                borderRadius: '10px'
+                width: '8px'
               }, '::-webkit-scrollbar-thumb': {
                 backgroundColor: '#dadadaff',
-                borderRadius: '19px'
+                width: '5px'
               }}}
             >
               <List>

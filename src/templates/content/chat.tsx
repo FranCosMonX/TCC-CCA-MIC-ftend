@@ -38,11 +38,19 @@ const Pagina_de_chat = () => {
         paddingLeft: '0px',
         position: 'relative',
         border: '.5px solid black',
-        borderRadius: '16px',
+        borderRadius: '16px 2px 2px 16px',
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        gap: '15px'
+        gap: '15px',
+        '::-webkit-scrollbar': {
+          backgroundColor: '#969696ff',
+          width: '8px',
+          height: '90%'
+        }, '::-webkit-scrollbar-thumb': {
+          backgroundColor: '#dadadaff',
+          width: '5px',
+        }
       }}>
         {mensagens.map((mensagem) => {
           const retorno = mensagem.entidade === 'sistema' ?
