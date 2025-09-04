@@ -41,10 +41,11 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          height: "maxContent",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form style={{'display': 'flex', 'alignItems': 'center'}} onSubmit={handleSubmit(onSubmit)}>
           <Card sx={{
             width: '600px',
             height: '510px',
