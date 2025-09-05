@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography } from "@mui/material"
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { IntroducaoSchema, type IntroducaoFormData } from "../../utils/Introducao.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import api from "../../api/api";
 
 interface ApresentacaoParams {
   irParaChat_funcion: () => void;
@@ -13,13 +14,22 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion}) => {
   const {
     register,
     handleSubmit,
-    formState: {errors}
+    formState: {errors},
+    setError
   } = useForm<IntroducaoFormData>({
     resolver: zodResolver(IntroducaoSchema)
   })
 
   const onSubmit: SubmitHandler<IntroducaoFormData> = async (data) => {
-    irParaChat_funcion();
+    await api.post('/usuario', {'usuario': data.apelido})
+      .then(() => {
+        alert('Apelido atualizado com exito.')
+        irParaChat_funcion();
+      })
+      .catch((e) => {
+        console.log(e.response.data.error)
+        setError('apelido', {message: 'Houve um erro ao mudar o nome de usuário'})
+      })
   }
 
   return (
