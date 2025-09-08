@@ -11,6 +11,7 @@ interface MensagemBaseParams {
 const MensagemBase: React.FC<MensagemBaseParams> = ({textAlign, text, sx}) => {
   return (
     <Box
+      component={'pre'}
       maxWidth={'100%'}
       fontFamily={'Arial'}
       fontSize={"20px"}
@@ -18,7 +19,7 @@ const MensagemBase: React.FC<MensagemBaseParams> = ({textAlign, text, sx}) => {
       textAlign={textAlign}
       sx={sx}
     >
-      <Markdown >
+      <Markdown>
         {text}
       </Markdown>
     </Box>

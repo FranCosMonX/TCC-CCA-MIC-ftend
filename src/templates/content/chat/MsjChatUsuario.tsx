@@ -13,7 +13,10 @@ const MsgChatUsuario: React.FC<MsgChatUsuarioParams> = ({text}) => {
           border: '1px solid darkgray',
           borderBottom: '2px solid darkgray',
           borderRadius:'20px 5px 5px 20px',
-          backgroundColor: '#9de3fa49'
+          backgroundColor: '#9de3fa49',
+          whiteSpace: 'normal',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word'
         }}
       />
     </React.Fragment>

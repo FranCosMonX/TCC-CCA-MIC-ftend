@@ -12,7 +12,10 @@ const MsgChatSistema: React.FC<MsgChatSistemaParams> = ({text}) => {
         sx={{
           border: '1px solid darkgray',
           borderBottom: '2px solid darkgray',
-          borderRadius:'5px 20px 20px 5px'
+          borderRadius:'5px 20px 20px 5px',
+          whiteSpace: 'normal',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word'
         }}
       />
     </React.Fragment>

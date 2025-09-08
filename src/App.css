@@ -9,3 +9,8 @@
 form {
   height: 100%;
 }
+
+pre pre {
+  max-width: 100%;
+  text-wrap: inherit;
+}

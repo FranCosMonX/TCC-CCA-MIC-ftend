@@ -1,8 +1,8 @@
-import { Box, Button, List, ListItem, TextareaAutosize } from "@mui/material";
+import { Box, Button, TextareaAutosize } from "@mui/material";
 import MyContainer from "../MyContainer";
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
-import React, { type ChangeEvent } from "react"
+import React from "react"
 import MsgChatSistema from "./chat/MsgChatSistema";
 import MsgChatUsuario from "./chat/MsjChatUsuario";
 import api from "../../api/api";
@@ -14,50 +14,41 @@ interface InterfaceRegistroDeMensagem{
 }
 
 const Pagina_de_chat = () => {
-  const [contador, setContador] = React.useState(5)
+  const [contador, setContador] = React.useState(0)
   const [inputMensagem, setInputMensagem] = React.useState("")
-  const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([
-    {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 0},
-    {entidade: 'sistema', mensagem: `javascript
-        int setup(){
-              PINMODE();
-        }
-    
-        int loop() {
-        }`, index: 1},
-        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 2},
-        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 3},
-        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 4},
-        {entidade: 'usuario', mensagem: 'gostaria de um exemplo de hello world', index: 5},
-  ])
+  const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([])
+
+  const addMsgNoHistorico = async (index: number, entidade: 'sistema' | 'usuario', mensagem: string) => {
+    console.log(index)
+    setMensagens((preventMsg) => [
+      ...preventMsg,
+      {
+        entidade: entidade,
+        mensagem: mensagem,
+        index: index
+      }
+    ])
+  }
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(inputMensagem)
-    setContador(contador+1);
-    setMensagens([
-      ...mensagens,
-      {
-        entidade: 'usuario',
-        mensagem: inputMensagem,
-        index: contador
-      }
-    ])
+    console.log(mensagens)
+    
+    let cont = contador
+    setTimeout(() => {
+      addMsgNoHistorico(cont , "usuario", inputMensagem);
+    }, 100)
+    
     if(inputMensagem.length > 0){
       await api.post('/chat', {'mensagem': inputMensagem})
         .then((e) => {
-          setContador(contador+1);
-          console.log(e)
-          setMensagens([
-            ...mensagens,
-            {
-              entidade: 'sistema',
-              mensagem: e.data.mensagem,
-              index: contador
-            }
-          ])
+          setTimeout(() => {
+            addMsgNoHistorico(cont + 1, "sistema", e.data.mensagem)
+          }, 100)
         })
-    }
+      }
+
+    setContador((prev) => prev + 2);
   }
 
   return (
