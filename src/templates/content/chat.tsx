@@ -34,6 +34,15 @@ const Pagina_de_chat = () => {
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(inputMensagem)
+    setContador(contador+1);
+    setMensagens([
+      ...mensagens,
+      {
+        entidade: 'usuario',
+        mensagem: inputMensagem,
+        index: contador
+      }
+    ])
     if(inputMensagem.length > 0){
       await api.post('/chat', {'mensagem': inputMensagem})
         .then((e) => {
