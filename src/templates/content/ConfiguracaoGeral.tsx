@@ -27,7 +27,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {
   }
 
   const onSubmit: SubmitHandler<ConfigGeralFormData> =  async (data) => {
-
+    
   }
 
   return (

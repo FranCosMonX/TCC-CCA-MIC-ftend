@@ -46,6 +46,8 @@ const Pagina_de_chat = () => {
             addMsgNoHistorico(cont + 1, "sistema", e.data.mensagem)
           }, 100)
         })
+      
+        setInputMensagem("")
       }
 
     setContador((prev) => prev + 2);
