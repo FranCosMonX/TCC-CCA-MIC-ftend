@@ -47,7 +47,7 @@ const Pagina_de_chat = () => {
           }, 100)
         })
       }
-
+    
     setContador((prev) => prev + 2);
   }
 
@@ -108,7 +108,9 @@ const Pagina_de_chat = () => {
           }}
         />
         <Box display={"flex"} justifyContent={"center"} height={'100%'}  gap={'16px'}>
-          <Button type="submit" variant="outlined"><SendIcon /></Button>
+          <Button type="submit" variant="outlined" onClick={() => setTimeout(() => {
+            setInputMensagem('');
+          }, 100)}><SendIcon /></Button>
           <Button variant="outlined"><MicIcon /></Button>
         </Box>
       </Box>

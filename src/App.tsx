@@ -11,7 +11,7 @@ import MemoryIcon from '@mui/icons-material/Memory';
 import './App.css'
 
 const Inicio = () => {
-  const [eInicio, setEInicio] = React.useState(true);
+  const [eInicio, setEInicio] = React.useState(false);
   const [openModals, setOpenModals] = React.useState<{configGeral: boolean, configMicrocontrolador: boolean}>({
     configGeral : false, configMicrocontrolador : false
   })
