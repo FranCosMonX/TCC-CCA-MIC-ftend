@@ -1,5 +1,6 @@
 import { Box, Button, TextareaAutosize } from "@mui/material";
 import MyContainer from "../MyContainer";
+import PlayForWorkIcon from '@mui/icons-material/PlayForWork';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 import React from "react"
@@ -81,7 +82,6 @@ const Pagina_de_chat = () => {
           const retorno = mensagem.entidade === 'sistema' ?
             <MsgChatSistema key={mensagem.index} text={mensagem.mensagem} /> :
             <MsgChatUsuario key={mensagem.index} text={mensagem.mensagem} />
-          
             return retorno;
         })}
       </MyContainer>
@@ -110,8 +110,9 @@ const Pagina_de_chat = () => {
           }}
         />
         <Box display={"flex"} justifyContent={"center"} height={'100%'}  gap={'16px'}>
-          <Button type="submit" variant="outlined"><SendIcon /></Button>
-          <Button variant="outlined"><MicIcon /></Button>
+          <Button type="submit" variant="outlined" title="Enviar Mensagem"><SendIcon /></Button>
+          <Button variant="outlined" title="Gravar"><MicIcon /></Button>
+          <Button variant="contained" title="Compilar e Gravar"><PlayForWorkIcon /></Button>
         </Box>
       </Box>
     </React.Fragment>
