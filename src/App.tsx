@@ -60,7 +60,7 @@ const Inicio = () => {
       return false;
 
     if (openModals.configGeral)
-      return <ConfiguracaoGeral closeModal={fechar_config_geral_Callback} />
+      return <ConfiguracaoGeral closeModal={fechar_config_geral_Callback} openMensagemSistema={abrir_msg_sistema_Callback}/>
     if (openModals.configMicrocontrolador)
       return <ConfiguracaoMicro closeModal={fechar_config_micro_Callback} />
     return false;
