@@ -8,6 +8,7 @@ import { ConfigGeralSchema, type ConfigGeralFormData } from "../../utils/Configu
 
 interface ConfiguracaoGeralParams {
   closeModal: () => void;
+  openMensagemSistema: () => void;
 }
 
 const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {

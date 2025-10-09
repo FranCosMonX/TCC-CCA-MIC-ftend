@@ -10,7 +10,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
   const [configMicInicializado, setConfigMicInicializado] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(true);
   const [microcontrolador, setMicrocontrolador] = React.useState("");
-  const [core, setCore] = React.useState("");
+  const [idMiC, setIdMic] = React.useState("");
   
   React.useEffect(() => {
     if(!configMicInicializado){
@@ -31,6 +31,20 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
       // setConfigMicInicializado(true)
     }
   }, [configMicInicializado])
+
+  React.useEffect(() => {
+    const lista_ESP = ['ESP 32 NodeMCU']
+    const lista_ARDUINO = ['Arduino UNO R3', 'Arduino ATMega 328p']
+
+    if(lista_ESP.includes(microcontrolador)){
+      setIdMic('arduino:esp32')
+    }else if(lista_ARDUINO.includes(microcontrolador)){
+      setIdMic('arduino:avr')
+    }else{
+      setIdMic('Nenhum - escolha não reconhecida')
+      alert(microcontrolador)
+    }
+  }, [microcontrolador])
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -53,10 +67,6 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
     setMicrocontrolador(event.target.value)
   }
 
-  const handleChangeCore = (event: SelectChangeEvent) => {
-    setCore(event.target.value)
-  }
-
   return (
     <React.Fragment>
       <Modal
@@ -74,7 +84,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
       >
         <Card component={'form'} onSubmit={handleSubmit} sx={{
           width: '600px',
-          height: '570px',
+          height: '400px',
         }}>
           <CardHeader title="Configuração do Microcontrolador" subheader="Configurar o ambiente de execução para o microcontrolador." />
           <CardContent
@@ -85,7 +95,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
               paddingTop: '0px',
             }}
           >
-            <InputLabel sx={{fontSize: '1.2em'}}>Microcontrolador</InputLabel>
+            <InputLabel sx={{fontSize: '1.2em', fontWeight: 'bold'}}>Microcontrolador</InputLabel>
             <FormControl  sx={{ m: 1, minWidth: 120 }}>
               <Select
                 value={microcontrolador}
@@ -97,45 +107,28 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
                 <MenuItem value="">
                   <em>Nenhum</em>
                 </MenuItem>
-                <MenuItem value="ESP32">ESP 32</MenuItem>
+                <MenuItem value="ESP 32 NodeMCU">ESP 32 NodeMCU</MenuItem>
                 <MenuItem value="Arduino UNO R3">Arduino UNO R3</MenuItem>
                 <MenuItem value="Arduino ATMega 328p">Arduino ATMega 328p</MenuItem>
               </Select>
             </FormControl>
-            <InputLabel sx={{fontSize: '1.2em'}}>Core</InputLabel>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Select
-                id="core"
-                value={core}
-                onChange={handleChangeCore}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-              >
-                <MenuItem value=""><em>Nenhum</em></MenuItem>
-              </Select>
-            </FormControl>
             <Divider />
-            <Typography>Bibliotecas</Typography>
-            <Box
-              border={"1px solid gray"}
-              overflow={"auto"}
-              maxHeight={'96px'}
-              sx={{'::-webkit-scrollbar': {
-                backgroundColor: '#969696ff',
-                width: '8px'
-              }, '::-webkit-scrollbar-thumb': {
-                backgroundColor: '#dadadaff',
-                width: '5px'
-              }}}
-            >
-              <List>
-                <ListItem key={"0"}>Wi-fi</ListItem>
-                <ListItem key={"1"}>Bluetooth</ListItem>
-                <ListItem key={"2"}>ESP32</ListItem>
-              </List>
+            <Box display={"flex"} flexDirection={'column'} gap={'0.5px'}>
+              <Typography fontFamily={"inherit"} variant="h6">
+                Microcontrolador: <Typography component={'span'} fontWeight={'bold'} >{microcontrolador}</Typography>
+              </Typography>
+              <Typography fontFamily={"inherit"} variant="h6">
+                Identificador: <Typography component={'span'} fontWeight={'bold'} >{idMiC}</Typography>
+              </Typography>
+              <Typography fontFamily={"inherit"} variant="h6">
+                Drives instalados: <Typography component={'span'} fontWeight={'bold'} >Não</Typography>
+              </Typography>
             </Box>
             <Box display={'flex'} justifyContent={'space-between'}>
-              <Button variant="outlined">Cancelar</Button>
+              <Button variant="outlined" onClick={() => {
+                closeModal()
+                setModalOpen(false)
+              }}>Cancelar</Button>
               <Button type="submit" variant="contained">Salvar</Button>
             </Box>
           </CardContent>
