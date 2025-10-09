@@ -14,7 +14,7 @@ import MensagemSistema from "./templates/content/MensagemSistema";
 const Inicio = () => {
   const [eInicio, setEInicio] = React.useState(false);
   const [mensagemSistema, setMensagemSistema] = React.useState<{ativo: boolean, mensagem: string}>({
-    ativo: true, mensagem: ''
+    ativo: false, mensagem: ''
   })
   const [openModals, setOpenModals] = React.useState<{configGeral: boolean, configMicrocontrolador: boolean}>({
     configGeral : false, configMicrocontrolador : false

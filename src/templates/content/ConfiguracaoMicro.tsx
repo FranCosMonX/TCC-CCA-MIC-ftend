@@ -42,7 +42,6 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
       setIdMic('arduino:avr')
     }else{
       setIdMic('Nenhum - escolha não reconhecida')
-      alert(microcontrolador)
     }
   }, [microcontrolador])
 
@@ -84,7 +83,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
       >
         <Card component={'form'} onSubmit={handleSubmit} sx={{
           width: '600px',
-          height: '400px',
+          height: 'max-content',
         }}>
           <CardHeader title="Configuração do Microcontrolador" subheader="Configurar o ambiente de execução para o microcontrolador." />
           <CardContent
@@ -113,17 +112,20 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
               </Select>
             </FormControl>
             <Divider />
-            <Box display={"flex"} flexDirection={'column'} gap={'0.5px'}>
-              <Typography fontFamily={"inherit"} variant="h6">
-                Microcontrolador: <Typography component={'span'} fontWeight={'bold'} >{microcontrolador}</Typography>
-              </Typography>
-              <Typography fontFamily={"inherit"} variant="h6">
-                Identificador: <Typography component={'span'} fontWeight={'bold'} >{idMiC}</Typography>
-              </Typography>
-              <Typography fontFamily={"inherit"} variant="h6">
-                Drives instalados: <Typography component={'span'} fontWeight={'bold'} >Não</Typography>
-              </Typography>
-            </Box>
+            {
+              microcontrolador !== "" && 
+              <Box display={"flex"} flexDirection={'column'} gap={'0.5px'}>
+                <Typography fontFamily={"inherit"} variant="h6">
+                  Microcontrolador: <Typography component={'span'} fontWeight={'bold'} >{microcontrolador}</Typography>
+                </Typography>
+                <Typography fontFamily={"inherit"} variant="h6">
+                  Identificador: <Typography component={'span'} fontWeight={'bold'} >{idMiC}</Typography>
+                </Typography>
+                <Typography fontFamily={"inherit"} variant="h6">
+                  Drives instalados: <Typography component={'span'} fontWeight={'bold'} >Será necessário verificar</Typography>
+                </Typography>
+              </Box>
+            }
             <Box display={'flex'} justifyContent={'space-between'}>
               <Button variant="outlined" onClick={() => {
                 closeModal()

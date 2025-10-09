@@ -8,10 +8,10 @@ import { ConfigGeralSchema, type ConfigGeralFormData } from "../../utils/Configu
 
 interface ConfiguracaoGeralParams {
   closeModal: () => void;
-  openMensagemSistema: () => void;
+  openMensagemSistema: (msg:string) => void;
 }
 
-const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {
+const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openMensagemSistema}) => {
   const [modalOpen, setModalOpen] = React.useState(true)
   const [iasmodels, setIasModels] = React.useState("")
 
@@ -28,7 +28,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {
   }
 
   const onSubmit: SubmitHandler<ConfigGeralFormData> =  async (data) => {
-    
+    console.log("Funcionou")
   }
 
   return (
@@ -49,7 +49,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {
         <form style={{'display': 'flex', 'alignItems': 'center'}} onSubmit={handleSubmit(onSubmit)}>
           <Card sx={{
             width: '600px',
-            height: '510px',
+            height: 'max-content',
             overflowY: 'auto',
           }}>
             <CardHeader title="Configuração Geral" subheader="Informações para a interação com o chat e salvamento de arquivos" />
@@ -60,6 +60,14 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal}) => {
                 gap: '16px'
               }}
             >
+              <TextField
+                label="Nome do projeto"
+                placeholder="Hello World"
+                fullWidth
+                {...register('nomeDoProjeto')}
+                error={!!errors.nomeDoProjeto}
+                helperText={errors.nomeDoProjeto?.message}
+              />
               <TextField
                 label="Local de arquivos"
                 placeholder="C:\users\teste\Document\teste"
