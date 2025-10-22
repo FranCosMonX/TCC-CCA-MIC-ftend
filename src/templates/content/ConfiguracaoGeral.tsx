@@ -5,6 +5,7 @@ import type { SelectChangeEvent } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConfigGeralSchema, type ConfigGeralFormData } from "../../utils/ConfiguracaoGeral.schema";
+import api from "../../api/api";
 
 interface ConfiguracaoGeralParams {
   closeModal: () => void;
@@ -14,6 +15,9 @@ interface ConfiguracaoGeralParams {
 const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openMensagemSistema}) => {
   const [modalOpen, setModalOpen] = React.useState(true)
   const [iasmodels, setIasModels] = React.useState("")
+  const [apiKey, setApiKey] = React.useState("")
+  const [mostraCodigo, setMoostraCodigo] = React.useState(false)
+  const [explica, setExplica] = React.useState(false)
 
   const {
     register,
@@ -27,8 +31,29 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
     setIasModels(event.target.value);
   }
 
+  const handleVerificarConexao = async () => {
+    await api.post('/verificaConexao', 
+      {ia:iasmodels, key_ai_api: apiKey})
+      .then(() => {
+        console.log("funcionou")
+      }).catch(() => {
+        console.error("Não funcionou")
+      })
+  }
+
   const onSubmit: SubmitHandler<ConfigGeralFormData> =  async (data) => {
-    console.log("Funcionou")
+    console.log(mostraCodigo)
+    await api.post('/configuracaoGeral', {
+      nome_projeto: data.nomeDoProjeto,
+      diretorio: data.diretorio,
+      key_ai_api: apiKey,
+      ver_codigo: mostraCodigo,
+      comentario_codigo: explica
+    }).then((e) => {
+      console.log(e)
+    }).catch((e) => {
+      console.error(e)
+    })
   }
 
   return (
@@ -92,15 +117,21 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   placeholder="asdasndu129203nfn28f2nf2"
                   type="text"
                   fullWidth
-                  {...register('apiKey')}
-                  error={!!errors.apiKey}
-                  helperText={errors.apiKey?.message}
+                  onChange={(e) => {setApiKey(e.target.value)}}
+                  error={apiKey.length < 1}
+                  helperText="Não pode conter valores nulos"
                 />
-                <Button><LoopIcon /></Button>
+                <Button onClick={handleVerificarConexao}><LoopIcon /></Button>
               </Box>
               <FormGroup>
-                <FormControlLabel control={<Checkbox />} label="Mostar código no histórico de conversa"/>
-                <FormControlLabel control={<Checkbox />} label="Explicar o código."/>
+                <FormControlLabel control={<Checkbox checked={mostraCodigo} onChange={
+                  (event: React.ChangeEvent<HTMLInputElement>) => {
+                    setMoostraCodigo(event.target.checked);
+                  }} />} label="Mostar código no histórico de conversa"/>
+                <FormControlLabel control={<Checkbox checked={explica} onChange={
+                  (event: React.ChangeEvent<HTMLInputElement>) => {
+                    setExplica(event.target.checked);
+                  }} />} label="Explicar o código."/>
               </FormGroup>
               <Box width={'100%'} display={"flex"} justifyContent={"space-between"}>
                 <Button variant="outlined" onClick={() => {
