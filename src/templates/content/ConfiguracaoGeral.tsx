@@ -7,25 +7,75 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ConfigGeralSchema, type ConfigGeralFormData } from "../../utils/ConfiguracaoGeral.schema";
 import api from "../../api/api";
 
+interface ConfGeral {
+  nomeProjeto: string
+  diretorio: string
+  ia: string
+  key_ai_api: string
+  verCodigo: boolean
+  comentarioCodigo: boolean
+}
+
 interface ConfiguracaoGeralParams {
   closeModal: () => void;
   openMensagemSistema: (msg:string) => void;
 }
 
 const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openMensagemSistema}) => {
+  const [confGerIni, setConfigGerIni] = React.useState(false)
   const [modalOpen, setModalOpen] = React.useState(true)
   const [iasmodels, setIasModels] = React.useState("")
-  const [apiKey, setApiKey] = React.useState("")
+  const [apiKey, setApiKey] = React.useState<{error:boolean, helperText:string, value: string}>({
+    error:false, helperText:"", value: ""
+  })
   const [mostraCodigo, setMoostraCodigo] = React.useState(false)
   const [explica, setExplica] = React.useState(false)
 
+  
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm<ConfigGeralFormData>({
-    resolver: zodResolver(ConfigGeralSchema)
+    resolver: zodResolver(ConfigGeralSchema),
+    defaultValues: {
+      diretorio: "",
+      nomeDoProjeto: ""
+    }
   })
+
+  React.useEffect(() => {
+    if(!confGerIni){
+      const req = async () => {
+        await api.get('/configuracao')
+          .then((response) => {
+            if (response.status == 200){
+              const dados = response.data
+
+              reset({
+                diretorio: dados.diretorio,
+                nomeDoProjeto: dados.nome_projeto
+              })
+
+              // Atualiza estados manuais direto com dados
+              setApiKey({ error: false, helperText: "", value: dados.key_ai_api })
+              setExplica(dados.comentario_codigo)
+              setMoostraCodigo(dados.ver_codigo)
+              setIasModels(dados.ia)
+
+              reset({
+                diretorio: dados.diretorio,
+                nomeDoProjeto: dados.nome_projeto
+              })
+              console.log(response)
+            }
+          })
+      }
+      req()
+      setConfigGerIni(true)
+    }
+  }, [confGerIni])
 
   const handleChangeIasModels = (event: SelectChangeEvent) => {
     setIasModels(event.target.value);
@@ -42,7 +92,13 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
   }
 
   const onSubmit: SubmitHandler<ConfigGeralFormData> =  async (data) => {
-    console.log(mostraCodigo)
+    if (apiKey.value.length < 1){
+      setApiKey({
+        value: "",
+        error: true,
+        helperText: "Não pode haver valores nulos"
+      })
+    }
     await api.post('/configuracaoGeral', {
       nome_projeto: data.nomeDoProjeto,
       diretorio: data.diretorio,
@@ -89,6 +145,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                 label="Nome do projeto"
                 placeholder="Hello World"
                 fullWidth
+                InputLabelProps={{ shrink: true }}
                 {...register('nomeDoProjeto')}
                 error={!!errors.nomeDoProjeto}
                 helperText={errors.nomeDoProjeto?.message}
@@ -97,6 +154,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                 label="Local de arquivos"
                 placeholder="C:\users\teste\Document\teste"
                 fullWidth
+                InputLabelProps={{ shrink: true }}
                 {...register('diretorio')}
                 error={!!errors.diretorio}
                 helperText={errors.diretorio?.message}
@@ -108,6 +166,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   onChange={handleChangeIasModels}
                   displayEmpty
                 >
+                  <MenuItem value="">Selecione uma IA</MenuItem>
                   <MenuItem value="ChatGPT">ChatGPT</MenuItem>
                 </Select>
               </FormControl>
@@ -117,9 +176,16 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   placeholder="asdasndu129203nfn28f2nf2"
                   type="text"
                   fullWidth
-                  onChange={(e) => {setApiKey(e.target.value)}}
-                  error={apiKey.length < 1}
-                  helperText="Não pode conter valores nulos"
+                  value={apiKey.value}
+                  onChange={(e) => {
+                    setApiKey({
+                      helperText: "",
+                      error:false,
+                      value: e.target.value
+                    })
+                  }}
+                  error={apiKey.error}
+                  helperText={apiKey.helperText}
                 />
                 <Button onClick={handleVerificarConexao}><LoopIcon /></Button>
               </Box>
