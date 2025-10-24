@@ -7,15 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ConfigGeralSchema, type ConfigGeralFormData } from "../../utils/ConfiguracaoGeral.schema";
 import api from "../../api/api";
 
-interface ConfGeral {
-  nomeProjeto: string
-  diretorio: string
-  ia: string
-  key_ai_api: string
-  verCodigo: boolean
-  comentarioCodigo: boolean
-}
-
 interface ConfiguracaoGeralParams {
   closeModal: () => void;
   openMensagemSistema: (msg:string) => void;
@@ -84,13 +75,13 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
 
   const handleVerificarConexao = async () => {
     await api.post('/verificaConexao', 
-      {ia:iasmodels, key_ai_api: apiKey})
+      {ia:iasmodels, key_ai_api: apiKey.value})
       .then(() => {
         setStatusApiKey("success")
       }).catch((responseError) => {
         setStatusApiKey("error")
 
-        const dataError = responseError.data
+        const dataError = responseError.response.data
         setApiKey((prev) => ({
           ...prev,
           error: true,
@@ -178,7 +169,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   <MenuItem value="ChatGPT">ChatGPT</MenuItem>
                 </Select>
               </FormControl>
-              <Box display={'flex'} gap={'10px'}>
+              <Box display={'flex'} gap={'10px'} alignItems={"flex-start"} >
                 <TextField
                   label="Chave de acesso à API"
                   placeholder="asdasndu129203nfn28f2nf2"
@@ -198,7 +189,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   error={apiKey.error}
                   helperText={apiKey.helperText}
                 />
-                <Button title="Validar Conexão" color={statusAPIKey} onClick={handleVerificarConexao}><LoopIcon fontSize="large" /></Button>
+                <Button sx={{height: '56px'}} title="Validar Conexão" color={statusAPIKey} onClick={handleVerificarConexao}><LoopIcon fontSize="large" /></Button>
               </Box>
               <FormGroup>
                 <FormControlLabel control={<Checkbox checked={mostraCodigo} onChange={
