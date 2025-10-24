@@ -105,9 +105,12 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
       ver_codigo: mostraCodigo,
       comentario_codigo: explica
     }).then((e) => {
-      console.log(e)
-    }).catch((e) => {
-      console.error(e)
+      openMensagemSistema("Todos os dados foram salvos com sucesso.")
+      closeModal()
+      setModalOpen(false)
+    }).catch((responseError) => {
+      const dataError = responseError.response.data
+      openMensagemSistema(dataError.mensagem)
     })
   }
 

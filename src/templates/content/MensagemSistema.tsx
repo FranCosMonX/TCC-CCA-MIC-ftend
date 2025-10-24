@@ -29,7 +29,9 @@ const MensagemSistema: React.FC<MensagemSistemaParams> = ({ closeModal, mensagem
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '10px'
+        gap: '10px',
+        maxWidth: '500px',
+        textAlign: 'center'
       }}>
         <Typography>{mensagemSistema}</Typography>
         <Button variant="contained" onClick={() => {
