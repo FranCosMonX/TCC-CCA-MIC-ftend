@@ -23,7 +23,14 @@ const MensagemSistema: React.FC<MensagemSistemaParams> = ({ closeModal, mensagem
         height: "maxContent",
       }}
     >
-      <Card>
+      <Card sx={{
+        padding: '10px 20px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '10px'
+      }}>
         <Typography>{mensagemSistema}</Typography>
         <Button variant="contained" onClick={() => {
           closeModal()
