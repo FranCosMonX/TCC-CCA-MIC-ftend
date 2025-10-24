@@ -26,8 +26,9 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
   const [modalOpen, setModalOpen] = React.useState(true)
   const [iasmodels, setIasModels] = React.useState("")
   const [apiKey, setApiKey] = React.useState<{error:boolean, helperText:string, value: string}>({
-    error:false, helperText:"", value: ""
+    error:false, helperText:"Chave válida.", value: ""
   })
+  const [statusAPIKey, setStatusApiKey] = React.useState<'primary' | 'success' | 'error' | 'warning'>("primary")
   const [mostraCodigo, setMoostraCodigo] = React.useState(false)
   const [explica, setExplica] = React.useState(false)
 
@@ -36,7 +37,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset, setError
   } = useForm<ConfigGeralFormData>({
     resolver: zodResolver(ConfigGeralSchema),
     defaultValues: {
@@ -85,9 +86,16 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
     await api.post('/verificaConexao', 
       {ia:iasmodels, key_ai_api: apiKey})
       .then(() => {
-        console.log("funcionou")
-      }).catch(() => {
-        console.error("Não funcionou")
+        setStatusApiKey("success")
+      }).catch((responseError) => {
+        setStatusApiKey("error")
+
+        const dataError = responseError.data
+        setApiKey((prev) => ({
+          ...prev,
+          error: true,
+          helperText: dataError.mensagem
+        }))
       })
   }
 
@@ -145,7 +153,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                 label="Nome do projeto"
                 placeholder="Hello World"
                 fullWidth
-                InputLabelProps={{ shrink: true }}
+                slotProps={{ inputLabel: {shrink: true} }}
                 {...register('nomeDoProjeto')}
                 error={!!errors.nomeDoProjeto}
                 helperText={errors.nomeDoProjeto?.message}
@@ -154,7 +162,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                 label="Local de arquivos"
                 placeholder="C:\users\teste\Document\teste"
                 fullWidth
-                InputLabelProps={{ shrink: true }}
+                slotProps={{ inputLabel: {shrink: true} }}
                 {...register('diretorio')}
                 error={!!errors.diretorio}
                 helperText={errors.diretorio?.message}
@@ -176,6 +184,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   placeholder="asdasndu129203nfn28f2nf2"
                   type="text"
                   fullWidth
+                  color={statusAPIKey}
                   value={apiKey.value}
                   onChange={(e) => {
                     setApiKey({
@@ -183,11 +192,13 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                       error:false,
                       value: e.target.value
                     })
+                    if(statusAPIKey === "success")
+                      setStatusApiKey("warning")
                   }}
                   error={apiKey.error}
                   helperText={apiKey.helperText}
                 />
-                <Button onClick={handleVerificarConexao}><LoopIcon /></Button>
+                <Button title="Validar Conexão" color={statusAPIKey} onClick={handleVerificarConexao}><LoopIcon fontSize="large" /></Button>
               </Box>
               <FormGroup>
                 <FormControlLabel control={<Checkbox checked={mostraCodigo} onChange={
