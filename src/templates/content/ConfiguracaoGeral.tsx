@@ -78,6 +78,17 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
       {ia:iasmodels, key_ai_api: apiKey.value})
       .then(() => {
         setStatusApiKey("success")
+        setApiKey((prev) => ({
+          ...prev,
+          helperText: "Verificado com sucesso!"
+        }))
+
+        setTimeout(() => {
+          setApiKey((prev) => ({
+          ...prev,
+          helperText: ""
+        }))
+        }, 1500)
       }).catch((responseError) => {
         setStatusApiKey("error")
 
@@ -101,16 +112,30 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
     await api.post('/configuracaoGeral', {
       nome_projeto: data.nomeDoProjeto,
       diretorio: data.diretorio,
-      key_ai_api: apiKey,
+      key_ai_api: apiKey.value,
       ver_codigo: mostraCodigo,
       comentario_codigo: explica
-    }).then((e) => {
+    }).then(() => {
       openMensagemSistema("Todos os dados foram salvos com sucesso.")
       closeModal()
       setModalOpen(false)
     }).catch((responseError) => {
       const dataError = responseError.response.data
-      openMensagemSistema(dataError.mensagem)
+      console.log(dataError)
+      if (responseError.status == 500)
+        openMensagemSistema(dataError.mensagem)
+      console.log(dataError.campo)
+      if (['nomeDoProjeto', 'diretorio'].includes(dataError.campo))
+        setError(dataError.campo, {message: dataError.mensagem})
+      
+      if (dataError.campo === "key_ai_api"){
+        setStatusApiKey("error")
+        setApiKey((prev) => ({
+          ...prev,
+          error: true,
+          helperText: dataError.mensagem
+        }))
+      }
     })
   }
 
