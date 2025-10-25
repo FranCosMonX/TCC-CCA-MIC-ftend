@@ -4,31 +4,32 @@ import api from "../../api/api";
 
 interface ConfiguracaoMicroParams {
   closeModal: () => void;
+  openMensagemSistema: (msg:string) => void;
 }
 
-const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) => {
+const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, openMensagemSistema }) => {
   const [configMicInicializado, setConfigMicInicializado] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(true);
   const [microcontrolador, setMicrocontrolador] = React.useState("");
   const [idMiC, setIdMic] = React.useState("");
+  const [statusAmbiente, setStatusAmbiente] = React.useState("")
   
   React.useEffect(() => {
     if(!configMicInicializado){
       const carregarDados = async () => {
-        await api.get('/configuracaoMicrocontrolador')
-          .then((e: any) => {
-            console.log(e);
-            setMicrocontrolador(e.microcontrolador);
+        await api.get('/configuracao')
+          .then((response) => {
+            const dataResponse = response.data
+            setMicrocontrolador(dataResponse.microcontrolador);
+            setStatusAmbiente("Ambiente já configurado.")
           })
-          .catch(() => {
-            alert("Problemas ao carregar os dados do microcontrolador.");
-            closeModal();
-            setModalOpen(false);
+          .catch((e) => {
+            setStatusAmbiente("Será necessário verificar")
           })
       }
   
-      //const dados = carregarDados()
-      // setConfigMicInicializado(true)
+      carregarDados()
+      setConfigMicInicializado(true)
     }
   }, [configMicInicializado])
 
@@ -51,14 +52,25 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
     if (microcontrolador == "") {
       alert("Problema em modificar o campo. Escolha uma opção válida.")
     }
-    await api.post('/configuracaoMicrocontrolador', {microcontrolador: microcontrolador})
-      .then((e:any) => {
-        alert(e.data.mensagem)
+    await api.post('/configuracaoMicrocontrolador',
+      {microcontrolador: microcontrolador, id_microcontrolador: idMiC})
+      .then((response) => {
+        openMensagemSistema(response.data.mensagem)
         closeModal()
         setModalOpen(false)
       })
-      .catch(() => {
-        alert("Os dados não podem ser salvos. Examine os campos e tente novamente.")
+      .catch((responseError) => {
+        const dataError = responseError.response.data
+        
+        if (responseError.status < 500)
+          openMensagemSistema(dataError.mensagem)
+
+        if (responseError.status >= 500){
+          openMensagemSistema("Houve um problema no sistema interno. Contacte o desenvolvedor.")
+          
+          closeModal()
+          setModalOpen(false)
+        }
       })
   }
 
@@ -122,7 +134,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal }) =>
                   Identificador: <Typography component={'span'} fontWeight={'bold'} >{idMiC}</Typography>
                 </Typography>
                 <Typography fontFamily={"inherit"} variant="h6">
-                  Drives instalados: <Typography component={'span'} fontWeight={'bold'} >Será necessário verificar</Typography>
+                  Drives instalados: <Typography component={'span'} fontWeight={'bold'} >{statusAmbiente}</Typography>
                 </Typography>
               </Box>
             }
