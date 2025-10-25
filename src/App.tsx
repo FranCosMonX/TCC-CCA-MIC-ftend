@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Avatar, MenuItem } from "@mui/material";
+import { Avatar, MenuItem } from "@mui/material";
 import ConfiguracaoGeral from "./templates/content/ConfiguracaoGeral";
 import ConfiguracaoMicro from "./templates/content/ConfiguracaoMicro";
 import MyBody from "./templates/MyBody";
@@ -62,7 +62,7 @@ const Inicio = () => {
     if (openModals.configGeral)
       return <ConfiguracaoGeral closeModal={fechar_config_geral_Callback} openMensagemSistema={abrir_msg_sistema_Callback}/>
     if (openModals.configMicrocontrolador)
-      return <ConfiguracaoMicro closeModal={fechar_config_micro_Callback} />
+      return <ConfiguracaoMicro closeModal={fechar_config_micro_Callback} openMensagemSistema={abrir_msg_sistema_Callback}/>
     return false;
   }
 

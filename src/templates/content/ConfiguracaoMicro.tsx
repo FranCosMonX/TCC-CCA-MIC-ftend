@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, CardHeader, Divider, FormControl, InputLabel, List, ListItem, MenuItem, Modal, Select, Typography, type SelectChangeEvent } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Divider, FormControl, InputLabel, MenuItem, Modal, Select, Typography, type SelectChangeEvent } from "@mui/material";
 import React, { type ChangeEvent } from "react"
 import api from "../../api/api";
 
@@ -23,7 +23,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
             setMicrocontrolador(dataResponse.microcontrolador);
             setStatusAmbiente("Ambiente já configurado.")
           })
-          .catch((e) => {
+          .catch(() => {
             setStatusAmbiente("Será necessário verificar")
           })
       }
