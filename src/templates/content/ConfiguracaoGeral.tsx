@@ -90,6 +90,13 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
         }))
         }, 1500)
       }).catch((responseError) => {
+        if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
+          openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
+          
+          closeModal()
+          setModalOpen(false)
+          return
+        }
         setStatusApiKey("error")
 
         const dataError = responseError.response.data
@@ -120,6 +127,14 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
       closeModal()
       setModalOpen(false)
     }).catch((responseError) => {
+      if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
+        openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
+        
+        closeModal()
+        setModalOpen(false)
+        return
+      }
+      
       const dataError = responseError.response.data
       console.log(dataError)
       if (responseError.status == 500)

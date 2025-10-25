@@ -12,7 +12,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
   const [modalOpen, setModalOpen] = React.useState(true);
   const [microcontrolador, setMicrocontrolador] = React.useState("");
   const [idMiC, setIdMic] = React.useState("");
-  const [statusAmbiente, setStatusAmbiente] = React.useState("")
+  const [statusAmbiente, setStatusAmbiente] = React.useState("Será necessário verificar")
   
   React.useEffect(() => {
     if(!configMicInicializado){
@@ -22,9 +22,6 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
             const dataResponse = response.data
             setMicrocontrolador(dataResponse.microcontrolador);
             setStatusAmbiente("Ambiente já configurado.")
-          })
-          .catch(() => {
-            setStatusAmbiente("Será necessário verificar")
           })
       }
   
@@ -60,17 +57,17 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
         setModalOpen(false)
       })
       .catch((responseError) => {
-        const dataError = responseError.response.data
-        
-        if (responseError.status < 500)
-          openMensagemSistema(dataError.mensagem)
-
-        if (responseError.status >= 500){
-          openMensagemSistema("Houve um problema no sistema interno. Contacte o desenvolvedor.")
+        if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
+          openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
           
           closeModal()
           setModalOpen(false)
+          return
         }
+        
+        const dataError = responseError.response.data
+        if (responseError.status < 500)
+          openMensagemSistema(dataError.mensagem)
       })
   }
 
