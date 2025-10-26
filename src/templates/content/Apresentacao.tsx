@@ -8,9 +8,10 @@ import api from "../../api/api";
 
 interface ApresentacaoParams {
   irParaChat_funcion: () => void;
+  openMensagemSistema: (msg:string) => void;
 }
 
-const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion}) => {
+const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMensagemSistema}) => {
   const {
     register,
     handleSubmit,
@@ -21,13 +22,20 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion}) => {
   })
 
   const onSubmit: SubmitHandler<IntroducaoFormData> = async (data) => {
+    console.log(api)
     await api.post('/usuario', {'usuario': data.apelido})
       .then(() => {
         alert('Apelido atualizado com exito.')
         irParaChat_funcion();
       })
-      .catch((e) => {
-        console.log(e.response.data.error)
+      .catch((responseError) => {
+        if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
+          openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
+          
+          irParaChat_funcion()
+          return
+        }
+        console.log(responseError.response.data.mensagem)
         setError('apelido', {message: 'Houve um erro ao mudar o nome de usuário'})
       })
   }

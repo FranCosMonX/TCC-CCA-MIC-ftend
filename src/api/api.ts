@@ -1,11 +1,13 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://192.168.18.44:5000',
+  baseURL: import.meta.env.VITE_API_URL,
   headers:{
     'Content-Type': 'application/json',
   },
   timeout: 100000
 })
+
+console.log(import.meta.env.VITE_API_URL)
 
 export default api;

@@ -8,17 +8,36 @@ import Pagina_de_chat from "./templates/content/chat";
 import Apresentacao from "./templates/content/Apresentacao";
 import SettingsIcon from '@mui/icons-material/Settings';
 import MemoryIcon from '@mui/icons-material/Memory';
-import './App.css'
 import MensagemSistema from "./templates/content/MensagemSistema";
+import api from "./api/api";
+import './App.css'
 
 const Inicio = () => {
-  const [eInicio, setEInicio] = React.useState(false);
+  const [eInicio, setEInicio] = React.useState(true);
+  const [apiInicializada, setApiInicializada] = React.useState(0)
   const [mensagemSistema, setMensagemSistema] = React.useState<{ativo: boolean, mensagem: string}>({
     ativo: false, mensagem: ''
   })
   const [openModals, setOpenModals] = React.useState<{configGeral: boolean, configMicrocontrolador: boolean}>({
     configGeral : false, configMicrocontrolador : false
   })
+
+  React.useEffect(() => {
+    if (apiInicializada < 2){
+      const handle_api_iniciar = async () => {
+        await api.get('/initdb')
+        .then(() => {
+          console.log("Inicializado com sucesso.")
+        })
+        .catch(() => {
+          abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.")
+        })
+      }
+
+      handle_api_iniciar()
+      setApiInicializada((prev) => (prev+1))
+    }
+  }, [apiInicializada])
 
   const fechar_config_geral_Callback = () => {
     setOpenModals({
@@ -90,7 +109,7 @@ const Inicio = () => {
         }}><MemoryIcon sx={{fontSize: '40px'}} /></MenuItem>
       </MyMenu>
       {!eInicio && <Pagina_de_chat />}
-      {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} />}
+      {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback}/>}
       {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem}/>}
       {handle_model()}
     </MyBody>
