@@ -1,6 +1,6 @@
 import React from "react"
 import MyContainer from "../MyContainer"
-import { Box, Button, TextField, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material"
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { IntroducaoSchema, type IntroducaoFormData } from "../../utils/Introducao.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,17 +12,41 @@ interface ApresentacaoParams {
 }
 
 const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMensagemSistema}) => {
+  const [loading, setLoading] = React.useState(false)
+  const [apresentacaoIniciada, setApresentacaoIniciada] = React.useState(0)
+
   const {
     register,
     handleSubmit,
     formState: {errors},
-    setError
+    setError,
+    reset
   } = useForm<IntroducaoFormData>({
     resolver: zodResolver(IntroducaoSchema)
   })
 
+  React.useEffect(() => {
+    if(apresentacaoIniciada < 1){
+      const req = async () => {
+        await api.get('/configuracao')
+          .then((response) => {
+            if (response.status == 200){
+              const dados = response.data
+
+              console.log(response)
+              reset({
+                apelido: dados.apelido
+              })
+            }
+          })
+      }
+      req()
+      setApresentacaoIniciada((prev) => (prev+1))
+    }
+  }, [apresentacaoIniciada])
+
   const onSubmit: SubmitHandler<IntroducaoFormData> = async (data) => {
-    console.log(api)
+    setLoading(true)
     await api.post('/usuario', {'usuario': data.apelido})
       .then(() => {
         alert('Apelido atualizado com exito.')
@@ -31,13 +55,12 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
       .catch((responseError) => {
         if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
           openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
-          
-          irParaChat_funcion()
           return
         }
-        console.log(responseError.response.data.mensagem)
+        
         setError('apelido', {message: 'Houve um erro ao mudar o nome de usuário'})
       })
+      .finally(() => setLoading(false))
   }
 
   return (
@@ -67,7 +90,8 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
             display={'flex'}
             justifyContent={'center'}
           >
-            <Button variant="contained" type="submit" >Prosseguir</Button>
+            {loading && <CircularProgress /> }
+            {!loading && <Button variant="contained" type="submit" >Prosseguir</Button>}
           </Box>
       </MyContainer>
     </form>

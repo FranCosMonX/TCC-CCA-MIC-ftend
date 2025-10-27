@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, CardHeader, Divider, FormControl, InputLabel, MenuItem, Modal, Select, Typography, type SelectChangeEvent } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Divider, FormControl, InputLabel, LinearProgress, MenuItem, Modal, Select, Typography, type SelectChangeEvent } from "@mui/material";
 import React, { type ChangeEvent } from "react"
 import api from "../../api/api";
 
@@ -12,6 +12,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
   const [modalOpen, setModalOpen] = React.useState(true);
   const [microcontrolador, setMicrocontrolador] = React.useState("");
   const [idMiC, setIdMic] = React.useState("");
+  const [loading, setLoading] = React.useState(false)
   const [statusAmbiente, setStatusAmbiente] = React.useState("Será necessário verificar")
   
   React.useEffect(() => {
@@ -45,10 +46,12 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
-
     if (microcontrolador == "") {
-      alert("Problema em modificar o campo. Escolha uma opção válida.")
+      openMensagemSistema("Problema em modificar o campo. Escolha uma opção válida.")
+      return
     }
+
+    setLoading(true)
     await api.post('/configuracaoMicrocontrolador',
       {microcontrolador: microcontrolador, id_microcontrolador: idMiC})
       .then((response) => {
@@ -68,6 +71,9 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
         const dataError = responseError.response.data
         if (responseError.status < 500)
           openMensagemSistema(dataError.mensagem)
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 
@@ -135,13 +141,22 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
                 </Typography>
               </Box>
             }
-            <Box display={'flex'} justifyContent={'space-between'}>
-              <Button variant="outlined" onClick={() => {
-                closeModal()
-                setModalOpen(false)
-              }}>Cancelar</Button>
-              <Button type="submit" variant="contained">Salvar</Button>
-            </Box>
+            {
+              loading &&
+              <Box width={'100%'}>
+                <LinearProgress color="primary"/>
+              </Box>
+            }
+            {
+              !loading &&
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Button variant="outlined" onClick={() => {
+                  closeModal()
+                  setModalOpen(false)
+                }}>Cancelar</Button>
+                <Button type="submit" variant="contained">Salvar</Button>
+              </Box>
+            }
           </CardContent>
         </Card>
       </Modal>

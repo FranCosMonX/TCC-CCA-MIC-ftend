@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, LinearProgress, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import LoopIcon from '@mui/icons-material/Loop';
 import type { SelectChangeEvent } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -17,12 +17,12 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
   const [modalOpen, setModalOpen] = React.useState(true)
   const [iasmodels, setIasModels] = React.useState("")
   const [apiKey, setApiKey] = React.useState<{error:boolean, helperText:string, value: string}>({
-    error:false, helperText:"Chave válida.", value: ""
+    error:false, helperText:"", value: ""
   })
   const [statusAPIKey, setStatusApiKey] = React.useState<'primary' | 'success' | 'error' | 'warning'>("primary")
   const [mostraCodigo, setMoostraCodigo] = React.useState(false)
   const [explica, setExplica] = React.useState(false)
-
+  const [loading, setLoading] = React.useState(false)
   
   const {
     register,
@@ -74,6 +74,8 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
   }
 
   const handleVerificarConexao = async () => {
+    setLoading(true)
+    console.log(loading)
     await api.post('/verificaConexao', 
       {ia:iasmodels, key_ai_api: apiKey.value})
       .then(() => {
@@ -93,8 +95,8 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
         if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
           openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
           
-          closeModal()
-          setModalOpen(false)
+          // closeModal()
+          // setModalOpen(false)
           return
         }
         setStatusApiKey("error")
@@ -106,6 +108,9 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
           helperText: dataError.mensagem
         }))
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const onSubmit: SubmitHandler<ConfigGeralFormData> =  async (data) => {
@@ -116,6 +121,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
         helperText: "Não pode haver valores nulos"
       })
     }
+    setLoading(true)
     await api.post('/configuracaoGeral', {
       nome_projeto: data.nomeDoProjeto,
       diretorio: data.diretorio,
@@ -151,6 +157,9 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
           helperText: dataError.mensagem
         }))
       }
+    })
+    .finally(() => {
+      setLoading(false)
     })
   }
 
@@ -232,7 +241,10 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   error={apiKey.error}
                   helperText={apiKey.helperText}
                 />
-                <Button sx={{height: '56px'}} title="Validar Conexão" color={statusAPIKey} onClick={handleVerificarConexao}><LoopIcon fontSize="large" /></Button>
+                {
+                  loading && <CircularProgress color="primary" sx={{marginTop: '6px', marginRight: '5px', marginLeft: '5px'}}/> ||
+                  !loading && <Button sx={{height: '56px'}} title="Validar Conexão" color={statusAPIKey} onClick={handleVerificarConexao}><LoopIcon fontSize="large" /></Button>
+                }
               </Box>
               <FormGroup>
                 <FormControlLabel control={<Checkbox checked={mostraCodigo} onChange={
@@ -244,12 +256,21 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                     setExplica(event.target.checked);
                   }} />} label="Explicar o código."/>
               </FormGroup>
-              <Box width={'100%'} display={"flex"} justifyContent={"space-between"}>
-                <Button variant="outlined" onClick={() => {
-                  closeModal()
-                }}>Cancelar</Button>
-                <Button variant="contained" type="submit">Salvar</Button>
-              </Box>
+              {
+                loading &&
+                <Box width={'100%'}>
+                  <LinearProgress color="primary"/>
+                </Box>
+              }
+              {
+                !loading &&
+                <Box width={'100%'} display={"flex"} justifyContent={"space-between"}>
+                  <Button variant="outlined" onClick={() => {
+                    closeModal()
+                  }}>Cancelar</Button>
+                  <Button variant="contained" type="submit">Salvar</Button>
+                </Box>
+              }
             </CardContent>
           </Card>
         </form>
