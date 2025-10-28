@@ -53,7 +53,8 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
 
     setLoading(true)
     await api.post('/configuracaoMicrocontrolador',
-      {microcontrolador: microcontrolador, id_microcontrolador: idMiC})
+      {microcontrolador: microcontrolador, id_microcontrolador: idMiC},
+      {timeout: 60000})
       .then((response) => {
         openMensagemSistema(response.data.mensagem)
         closeModal()
