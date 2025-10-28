@@ -77,7 +77,8 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
     setLoading(true)
     console.log(loading)
     await api.post('/verificaConexao', 
-      {ia:iasmodels, key_ai_api: apiKey.value})
+      {ia:iasmodels, key_ai_api: apiKey.value},
+      {timeout: 10000})
       .then(() => {
         setStatusApiKey("success")
         setApiKey((prev) => ({
@@ -95,8 +96,8 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
         if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
           openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
           
-          // closeModal()
-          // setModalOpen(false)
+          closeModal()
+          setModalOpen(false)
           return
         }
         setStatusApiKey("error")
@@ -128,6 +129,8 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
       key_ai_api: apiKey.value,
       ver_codigo: mostraCodigo,
       comentario_codigo: explica
+    }, {
+      timeout: 30000
     }).then(() => {
       openMensagemSistema("Todos os dados foram salvos com sucesso.")
       closeModal()
@@ -142,10 +145,8 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
       }
       
       const dataError = responseError.response.data
-      console.log(dataError)
       if (responseError.status == 500)
         openMensagemSistema(dataError.mensagem)
-      console.log(dataError.campo)
       if (['nomeDoProjeto', 'diretorio'].includes(dataError.campo))
         setError(dataError.campo, {message: dataError.mensagem})
       
