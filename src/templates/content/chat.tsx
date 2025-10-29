@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, TextareaAutosize } from "@mui/material";
+import { Box, Button, TextareaAutosize } from "@mui/material";
 import MyContainer from "../MyContainer";
 import PlayForWorkIcon from '@mui/icons-material/PlayForWork';
 import SendIcon from '@mui/icons-material/Send';

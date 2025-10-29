@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Box, MenuItem } from "@mui/material";
+import { Avatar, MenuItem } from "@mui/material";
 import ConfiguracaoGeral from "./templates/content/ConfiguracaoGeral";
 import ConfiguracaoMicro from "./templates/content/ConfiguracaoMicro";
 import MyBody from "./templates/MyBody";
