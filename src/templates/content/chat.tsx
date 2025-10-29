@@ -3,7 +3,7 @@ import MyContainer from "../MyContainer";
 import PlayForWorkIcon from '@mui/icons-material/PlayForWork';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
-import React from "react"
+import React, { useEffect } from "react"
 import MsgChatSistema from "./chat/MsgChatSistema";
 import MsgChatUsuario from "./chat/MsjChatUsuario";
 import api from "../../api/api";
@@ -19,8 +19,14 @@ const Pagina_de_chat = () => {
   const [inputMensagem, setInputMensagem] = React.useState("")
   const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([])
 
+  useEffect(() => {
+    const verUltimaMensagem = document.querySelector(".chatArea");
+    if (verUltimaMensagem && mensagens[mensagens.length-1].entidade === "usuario") {
+      verUltimaMensagem.scrollTop = verUltimaMensagem.scrollHeight;
+    }
+  }, [mensagens]);
+
   const addMsgNoHistorico = async (index: number, entidade: 'sistema' | 'usuario', mensagem: string) => {
-    console.log(index)
     setMensagens((preventMsg) => [
       ...preventMsg,
       {
@@ -56,6 +62,7 @@ const Pagina_de_chat = () => {
   return (
     <Box height={'88%'} display={"flex"} flexDirection={"column"} justifyContent={"flex-end"}>
       <MyContainer
+      className="chatArea"
       maxWidth={'md'}
       sx={{
         maxHeight: '100%',

@@ -6,12 +6,13 @@ interface MyContainerParams {
   children?: ReactNode;
   sx?: SxProps<Theme> | undefined;
   maxWidth?: false | Breakpoint | undefined;
+  className?: string;
 }
 
-const MyContainer: React.FC<MyContainerParams> = ({children, sx, maxWidth}) => {
+const MyContainer: React.FC<MyContainerParams> = ({className, children, sx, maxWidth}) => {
   
   return (
-    <Container maxWidth={!maxWidth ? 'xs' : maxWidth} sx={sx}>
+    <Container className={className} maxWidth={!maxWidth ? 'xs' : maxWidth} sx={sx}>
       {children}
     </Container>
   )

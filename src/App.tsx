@@ -21,13 +21,14 @@ const Inicio = () => {
   const [openModals, setOpenModals] = React.useState<{configGeral: boolean, configMicrocontrolador: boolean}>({
     configGeral : false, configMicrocontrolador : false
   })
+  const [dadosExistem, setDadosExistem] = React.useState(false)
 
   React.useEffect(() => {
     if (apiInicializada < 2){
       const handle_api_iniciar = async () => {
         await api.get('/initdb')
         .then(() => {
-          console.log("Inicializado com sucesso.")
+          setDadosExistem(true)
         })
         .catch(() => {
           abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.")
