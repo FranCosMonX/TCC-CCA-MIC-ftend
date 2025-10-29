@@ -1,4 +1,4 @@
-import { Box, Button, TextareaAutosize } from "@mui/material";
+import { Box, Button, Card, CardContent, TextareaAutosize } from "@mui/material";
 import MyContainer from "../MyContainer";
 import PlayForWorkIcon from '@mui/icons-material/PlayForWork';
 import SendIcon from '@mui/icons-material/Send';
@@ -33,7 +33,6 @@ const Pagina_de_chat = () => {
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(mensagens)
     
     let cont = contador
     setTimeout(() => {
@@ -41,7 +40,7 @@ const Pagina_de_chat = () => {
     }, 100)
     
     if(inputMensagem.length > 0){
-      await api.post('/chat', {'mensagem': inputMensagem})
+      await api.post('/chat', {'mensagem': inputMensagem}, {timeout: 60000})
         .then((e) => {
           setTimeout(() => {
             addMsgNoHistorico(cont + 1, "sistema", e.data.mensagem)
@@ -55,16 +54,15 @@ const Pagina_de_chat = () => {
   }
 
   return (
-    <React.Fragment>
-      <MyContainer 
+    <Box height={'88%'} display={"flex"} flexDirection={"column"} justifyContent={"flex-end"}>
+      <MyContainer
       maxWidth={'md'}
       sx={{
         maxHeight: '100%',
         paddingBottom: '24px',
         paddingLeft: '0px',
         position: 'relative',
-        border: '.5px solid black',
-        borderRadius: '16px 2px 2px 16px',
+        border: 'none',
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
@@ -113,11 +111,11 @@ const Pagina_de_chat = () => {
           <Button type="submit" variant="outlined" onClick={() => setTimeout(() => {
             setInputMensagem('');
           }, 100)}><SendIcon /></Button>
-          <Button variant="outlined" title="Gravar"><MicIcon /></Button>
-          <Button variant="contained" title="Compilar e Gravar"><PlayForWorkIcon /></Button>
+          <Button variant="outlined" title="Gravar"><MicIcon fontSize="large" /></Button>
+          <Button variant="contained" title="Compilar e Gravar"><PlayForWorkIcon fontSize="large" /></Button>
         </Box>
       </Box>
-    </React.Fragment>
+    </Box>
   )
 }
 

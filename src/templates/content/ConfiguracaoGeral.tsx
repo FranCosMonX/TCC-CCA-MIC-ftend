@@ -219,7 +219,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   displayEmpty
                 >
                   <MenuItem value="">Selecione uma IA</MenuItem>
-                  <MenuItem value="ChatGPT">ChatGPT</MenuItem>
+                  <MenuItem value="Germini">Germini</MenuItem>
                 </Select>
               </FormControl>
               <Box display={'flex'} gap={'10px'} alignItems={"flex-start"} >

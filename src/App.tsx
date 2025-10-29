@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, MenuItem } from "@mui/material";
+import { Avatar, Box, MenuItem } from "@mui/material";
 import ConfiguracaoGeral from "./templates/content/ConfiguracaoGeral";
 import ConfiguracaoMicro from "./templates/content/ConfiguracaoMicro";
 import MyBody from "./templates/MyBody";
@@ -108,7 +108,9 @@ const Inicio = () => {
           })
         }}><MemoryIcon sx={{fontSize: '40px'}} /></MenuItem>
       </MyMenu>
-      {!eInicio && <Pagina_de_chat />}
+      {!
+        eInicio && <Pagina_de_chat />
+      }
       {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback}/>}
       {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem}/>}
       {handle_model()}

@@ -33,7 +33,6 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
             if (response.status == 200){
               const dados = response.data
 
-              console.log(response)
               reset({
                 apelido: dados.apelido
               })
@@ -47,9 +46,8 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
 
   const onSubmit: SubmitHandler<IntroducaoFormData> = async (data) => {
     setLoading(true)
-    await api.post('/usuario', {'usuario': data.apelido})
+    await api.post('/usuario', {'usuario': data.apelido}, {timeout: 30000})
       .then(() => {
-        alert('Apelido atualizado com exito.')
         irParaChat_funcion();
       })
       .catch((responseError) => {
