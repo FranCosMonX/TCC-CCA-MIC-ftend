@@ -21,7 +21,7 @@ const Pagina_de_chat = () => {
 
   useEffect(() => {
     const verUltimaMensagem = document.querySelector(".chatArea");
-    if (verUltimaMensagem && mensagens[mensagens.length-1].entidade === "usuario") {
+    if (mensagens.length-1 >= 0 && verUltimaMensagem && mensagens[mensagens.length-1].entidade === "usuario") {
       verUltimaMensagem.scrollTop = verUltimaMensagem.scrollHeight;
     }
   }, [mensagens]);

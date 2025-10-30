@@ -10,6 +10,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import MemoryIcon from '@mui/icons-material/Memory';
 import MensagemSistema from "./templates/content/MensagemSistema";
 import api from "./api/api";
+import OpcaoBinariaSistema from "./templates/content/OpcaoBinariaSistema";
 import './App.css'
 
 const Inicio = () => {
@@ -18,27 +19,47 @@ const Inicio = () => {
   const [mensagemSistema, setMensagemSistema] = React.useState<{ativo: boolean, mensagem: string}>({
     ativo: false, mensagem: ''
   })
+  const [opcaoBinariaSistema, setOpcaoBinariaSistema] = React.useState<{ativo: boolean, mensagem: string, textTrue: string, textFalse: string}>({
+    ativo: false, mensagem: '', textTrue: '', textFalse:''
+  })
   const [openModals, setOpenModals] = React.useState<{configGeral: boolean, configMicrocontrolador: boolean}>({
     configGeral : false, configMicrocontrolador : false
   })
   const [dadosExistem, setDadosExistem] = React.useState(false)
 
   React.useEffect(() => {
-    if (apiInicializada < 2){
+    if (apiInicializada < 1){
       const handle_api_iniciar = async () => {
         await api.get('/initdb')
-        .then(() => {
-          setDadosExistem(true)
-        })
-        .catch(() => {
-          abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.")
-        })
+          .then((response) => {
+            console.log(response)
+            if (response.status == 204) return
+            if (response.status == 200)
+              setDadosExistem(true)
+          })
+          .catch(() => {
+            abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.")
+          })
       }
-
+      
       handle_api_iniciar()
       setApiInicializada((prev) => (prev+1))
     }
   }, [apiInicializada])
+
+  React.useEffect(() => {
+    console.log("dados: " + dadosExistem + ", apiInicializada: " + apiInicializada)
+    if(dadosExistem && apiInicializada < 5) {
+      console.log("executou")
+      setOpcaoBinariaSistema({
+        ativo: true,
+        mensagem: "Foi encontrado dados guardados no Banco de Dados. Desejas carregar o ambiente de exeução e e validação da conexão com a IA?",
+        textFalse:"Não",
+        textTrue: "Sim"
+      })
+      setApiInicializada((prev) => (prev+1))
+    }
+  }, [dadosExistem])
 
   const fechar_config_geral_Callback = () => {
     setOpenModals({
@@ -54,12 +75,14 @@ const Inicio = () => {
     })
   }
 
-  const abrir_msg_sistema_Callback = (msg: string) => {
-    setMensagemSistema({
-      mensagem: msg,
-      ativo: true
-    })
+  const fechar_alternativa_callback = () => {
+    setOpcaoBinariaSistema((prev) => ({
+        ...prev,
+        ativo: false
+      })
+    )
   }
+
   const fechar_msg_sistema_Callback = () => {
     setMensagemSistema({
       mensagem: "",
@@ -67,6 +90,34 @@ const Inicio = () => {
     })
   }
 
+  const acaoAlternativaCallback = async (opcao: boolean) => {
+    if(opcao) {
+      await api.post('CarregarConfiguracao', {timeout: 30000})
+        .then((response) => {
+          console.log(response)
+          abrir_msg_sistema_Callback(response.data.mensagem)
+        })
+        .catch((responseError) => {
+          console.log(responseError)
+          abrir_msg_sistema_Callback(responseError.response.data.mensagem)
+        })
+    } else {
+      await api.post('/RemoverConfiguracao', {timeout: 15000})
+        .then((response) => {
+          abrir_msg_sistema_Callback(response.data.mensagem)
+        })
+        .catch((responseError) => {
+          abrir_msg_sistema_Callback(responseError.response.data.mensagem)
+        })
+    }
+  } 
+
+  const abrir_msg_sistema_Callback = (msg: string) => {
+    setMensagemSistema({
+      mensagem: msg,
+      ativo: true
+    })
+  }
 
   const abrir_chat_callback = () => {
     setEInicio(false);
@@ -115,6 +166,12 @@ const Inicio = () => {
       {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback}/>}
       {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem}/>}
       {handle_model()}
+      { opcaoBinariaSistema.ativo && <OpcaoBinariaSistema 
+        closeModal={fechar_alternativa_callback}
+        alternativaCallback={acaoAlternativaCallback}
+        mensagemSistema={opcaoBinariaSistema.mensagem}
+        textBtnFalse={opcaoBinariaSistema.textFalse}
+        textBtnTrue={opcaoBinariaSistema.textTrue} />}
     </MyBody>
   )
 }
