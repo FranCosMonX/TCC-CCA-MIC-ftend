@@ -8,13 +8,17 @@ import MsgChatSistema from "./chat/MsgChatSistema";
 import MsgChatUsuario from "./chat/MsjChatUsuario";
 import api from "../../api/api";
 
+interface ChatParams {
+  openMensagemSistema: (msg:string) => void;
+}
+
 interface InterfaceRegistroDeMensagem{
   entidade: 'usuario' | 'sistema';
   mensagem: string;
   index: number;
 }
 
-const Pagina_de_chat = () => {
+const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema}) => {
   const [contador, setContador] = React.useState(0)
   const [inputMensagem, setInputMensagem] = React.useState("")
   const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([])
@@ -115,10 +119,10 @@ const Pagina_de_chat = () => {
           }}
         />
         <Box display={"flex"} justifyContent={"center"} height={'100%'}  gap={'16px'}>
-          <Button type="submit" variant="outlined" onClick={() => setTimeout(() => {
+          <Button type="submit" variant="outlined" title="Enviar Mensagem" onClick={() => setTimeout(() => {
             setInputMensagem('');
           }, 100)}><SendIcon /></Button>
-          <Button variant="outlined" title="Gravar"><MicIcon fontSize="large" /></Button>
+          <Button variant="outlined" title="Gravar" onClick={() => openMensagemSistema("Funcionalidade ainda esta em desenvolvimento")}><MicIcon fontSize="large" /></Button>
           <Button variant="contained" title="Compilar e Gravar"><PlayForWorkIcon fontSize="large" /></Button>
         </Box>
       </Box>

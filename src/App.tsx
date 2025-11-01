@@ -160,7 +160,7 @@ const Inicio = () => {
         }}><MemoryIcon sx={{fontSize: '40px'}} /></MenuItem>
       </MyMenu>
       {!
-        eInicio && <Pagina_de_chat />
+        eInicio && <Pagina_de_chat openMensagemSistema={abrir_msg_sistema_Callback}/>
       }
       {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback} load={loadUsername}/>}
       {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem}/>}
