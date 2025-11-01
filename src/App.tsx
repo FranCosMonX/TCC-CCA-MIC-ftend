@@ -16,6 +16,7 @@ import './App.css'
 const Inicio = () => {
   const [eInicio, setEInicio] = React.useState(true);
   const [apiInicializada, setApiInicializada] = React.useState(0)
+  const [loadUsername, setLoadUsername] = React.useState(false)
   const [mensagemSistema, setMensagemSistema] = React.useState<{ativo: boolean, mensagem: string}>({
     ativo: false, mensagem: ''
   })
@@ -30,9 +31,8 @@ const Inicio = () => {
   React.useEffect(() => {
     if (apiInicializada < 1){
       const handle_api_iniciar = async () => {
-        await api.get('/initdb')
+        await api.get('/initdb', {timeout: 30000})
           .then((response) => {
-            console.log(response)
             if (response.status == 204) return
             if (response.status == 200)
               setDadosExistem(true)
@@ -48,9 +48,7 @@ const Inicio = () => {
   }, [apiInicializada])
 
   React.useEffect(() => {
-    console.log("dados: " + dadosExistem + ", apiInicializada: " + apiInicializada)
-    if(dadosExistem && apiInicializada < 5) {
-      console.log("executou")
+    if(dadosExistem && apiInicializada < 3) {
       setOpcaoBinariaSistema({
         ativo: true,
         mensagem: "Foi encontrado dados guardados no Banco de Dados. Desejas carregar o ambiente de exeução e e validação da conexão com a IA?",
@@ -91,24 +89,25 @@ const Inicio = () => {
   }
 
   const acaoAlternativaCallback = async (opcao: boolean) => {
+    setLoadUsername(true)
     if(opcao) {
-      await api.post('CarregarConfiguracao', {timeout: 30000})
+      await api.post('CarregarConfiguracao',{}, {timeout: 20000})
         .then((response) => {
-          console.log(response)
           abrir_msg_sistema_Callback(response.data.mensagem)
         })
         .catch((responseError) => {
-          console.log(responseError)
           abrir_msg_sistema_Callback(responseError.response.data.mensagem)
         })
+        .finally(() => setLoadUsername(false))
     } else {
-      await api.post('/RemoverConfiguracao', {timeout: 15000})
+      await api.post('/RemoverConfiguracao',{}, {timeout: 20000})
         .then((response) => {
           abrir_msg_sistema_Callback(response.data.mensagem)
         })
         .catch((responseError) => {
           abrir_msg_sistema_Callback(responseError.response.data.mensagem)
         })
+        .finally(() => setLoadUsername(false))
     }
   } 
 
@@ -163,7 +162,7 @@ const Inicio = () => {
       {!
         eInicio && <Pagina_de_chat />
       }
-      {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback}/>}
+      {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback} load={loadUsername}/>}
       {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem}/>}
       {handle_model()}
       { opcaoBinariaSistema.ativo && <OpcaoBinariaSistema 

@@ -9,9 +9,10 @@ import api from "../../api/api";
 interface ApresentacaoParams {
   irParaChat_funcion: () => void;
   openMensagemSistema: (msg:string) => void;
+  load: boolean;
 }
 
-const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMensagemSistema}) => {
+const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMensagemSistema, load}) => {
   const [loading, setLoading] = React.useState(false)
   const [apresentacaoIniciada, setApresentacaoIniciada] = React.useState(0)
 
@@ -24,6 +25,10 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
   } = useForm<IntroducaoFormData>({
     resolver: zodResolver(IntroducaoSchema)
   })
+
+  React.useEffect(() => {
+    setLoading(load)
+  }, [load])
 
   React.useEffect(() => {
     if(apresentacaoIniciada < 1){
