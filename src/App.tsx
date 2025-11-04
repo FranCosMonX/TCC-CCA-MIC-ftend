@@ -31,7 +31,7 @@ const Inicio = () => {
   React.useEffect(() => {
     if (apiInicializada < 1){
       const handle_api_iniciar = async () => {
-        await api.get('/initdb', {timeout: 30000})
+        await api.get('/init', {timeout: 30000})
           .then((response) => {
             if (response.status == 204) return
             if (response.status == 200)
