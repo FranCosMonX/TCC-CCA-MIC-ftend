@@ -88,29 +88,6 @@ const Inicio = () => {
     })
   }
 
-  const acaoAlternativaCallback = async (opcao: boolean) => {
-    setLoadUsername(true)
-    if(opcao) {
-      await api.post('CarregarConfiguracao',{}, {timeout: 20000})
-        .then((response) => {
-          abrir_msg_sistema_Callback(response.data.mensagem)
-        })
-        .catch((responseError) => {
-          abrir_msg_sistema_Callback(responseError.response.data.mensagem)
-        })
-        .finally(() => setLoadUsername(false))
-    } else {
-      await api.post('/RemoverConfiguracao',{}, {timeout: 20000})
-        .then((response) => {
-          abrir_msg_sistema_Callback(response.data.mensagem)
-        })
-        .catch((responseError) => {
-          abrir_msg_sistema_Callback(responseError.response.data.mensagem)
-        })
-        .finally(() => setLoadUsername(false))
-    }
-  } 
-
   const abrir_msg_sistema_Callback = (msg: string) => {
     setMensagemSistema({
       mensagem: msg,
@@ -167,7 +144,28 @@ const Inicio = () => {
       {handle_model()}
       { opcaoBinariaSistema.ativo && <OpcaoBinariaSistema 
         closeModal={fechar_alternativa_callback}
-        alternativaCallback={acaoAlternativaCallback}
+        alternaticaTrueCallback={async () => {
+          setLoadUsername(true)
+          await api.post('CarregarConfiguracao',{}, {timeout: 20000})
+          .then((response) => {
+            abrir_msg_sistema_Callback(response.data.mensagem)
+          })
+          .catch((responseError) => {
+            abrir_msg_sistema_Callback(responseError.response.data.mensagem)
+          })
+          .finally(() => setLoadUsername(false))
+        }}
+        alternativaFalseCallback={async () => {
+          setLoadUsername(true)
+          await api.post('/RemoverConfiguracao',{}, {timeout: 20000})
+            .then((response) => {
+              abrir_msg_sistema_Callback(response.data.mensagem)
+            })
+            .catch((responseError) => {
+              abrir_msg_sistema_Callback(responseError.response.data.mensagem)
+            })
+            .finally(() => setLoadUsername(false))
+        }}
         mensagemSistema={opcaoBinariaSistema.mensagem}
         textBtnFalse={opcaoBinariaSistema.textFalse}
         textBtnTrue={opcaoBinariaSistema.textTrue} />}

@@ -3,13 +3,14 @@ import React from "react";
 
 interface MensagemSistemaParams {
   closeModal: () => void;
-  alternativaCallback: (opcao:boolean) => void;
+  alternaticaTrueCallback: () => void;
+  alternativaFalseCallback: () => void;
   textBtnFalse: string;
   textBtnTrue: string;
   mensagemSistema: string;
 }
 
-const OpcaoBinariaSistema: React.FC<MensagemSistemaParams> = ({ closeModal, mensagemSistema, textBtnFalse, textBtnTrue, alternativaCallback }) => {
+const OpcaoBinariaSistema: React.FC<MensagemSistemaParams> = ({ closeModal, mensagemSistema, textBtnFalse, textBtnTrue, alternaticaTrueCallback,alternativaFalseCallback }) => {
   const [modalOpen, setModalOpen] = React.useState(true)
 
   return (
@@ -35,12 +36,12 @@ const OpcaoBinariaSistema: React.FC<MensagemSistemaParams> = ({ closeModal, mens
         <Typography>{mensagemSistema}</Typography>
         <Box display={"flex"} justifyContent={'space-around'} width={'100%'}>
           <Button variant="outlined" onClick={() => {
-            alternativaCallback(false);
+            alternativaFalseCallback();
             closeModal()
             setModalOpen(false)
           }}>{textBtnFalse}</Button>
           <Button variant="contained" onClick={() => {
-            alternativaCallback(true);
+            alternaticaTrueCallback();
             closeModal()
             setModalOpen(false)
           }}>{textBtnTrue}</Button>
