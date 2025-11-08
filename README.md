@@ -8,22 +8,11 @@ O Construtor de Códigos Automáticos para Microcontroladores (CCA MIC) não só
 
 ## Inteligência Artificial
 
-...
+A Inteligência Artificial (IA) é um campo da ciência da computação que desenvolve sistemas capazes de realizar tarefas que normalmente exigiriam inteligência humana. Isso inclui o reconhecimento de padrões, a aprendizagem com dados (machine learning), a tomada de decisões, a geração de linguagem natural e a automação de processos. Em outras palavras, a IA busca criar máquinas que pensem, aprendam e ajam de forma autônoma ou assistida, simulando aspectos do raciocínio humano.
 
-### O uso de Inteligência Artificial no dia a dia das pessoas
+Notoriamente, o uso de IA tem se destacado nos últimos anos. A cada novo aplicativo ou site lançado, é comum haver alguma integração com essa tecnologia — seja para otimizar tarefas, automatizar processos ou oferecer respostas rápidas ao usuário, evitando longas pesquisas em navegadores. No ambiente de trabalho, a IA desempenha um papel fundamental quando o tema é agilidade e produtividade. Dependendo da área, é possível utilizá-la para gerar resultados mais elaborados e eficientes. No entanto, em algumas profissões, o uso irrestrito de IA pode ser problemático, especialmente quando envolve dados pessoais ou informações sensíveis, já que muitas ferramentas utilizam esses dados para o próprio treinamento — algo previsto em seus termos de uso e muitas vezes ignorado pelos usuários. Profissões como advocacia, consultoria autônoma ou gestão de dados exigem cuidado redobrado nesse aspecto. Para desenvolvedores de software, a IA representa uma ferramenta de apoio valiosa, desde que usada com discernimento. Ela pode ajudar a otimizar o tempo, organizar códigos e detectar vulnerabilidades, mas não deve substituir o conhecimento técnico do profissional. Quando usada de forma excessiva ou incorreta, pode gerar dependência e prejudicar o aprendizado.
 
-...
-
-### O uso de Inteligência Artificial no trabalho
-
-...
-
-### O uso de Inteligência Artificial na programação
-
-...
-
-### A importância de um intermediário entre o Usuário e a Inteligência Artificial
-
+Atualmente, muitos desenvolvedores têm recorrido à IA para gerar aplicações completas, em vez de utilizá-la como instrumento de aprendizado. Isso acaba criando um efeito colateral: o tempo de consolidação dos projetos aumenta, e a correção de erros se torna mais difícil, especialmente quando ocorrem após a entrega ao cliente — já que o programador pode não compreender a fundo o código produzido pela IA. Diante desse cenário, torna-se evidente a necessidade de um intermediário entre o desenvolvedor e a IA — uma espécie de agente ou camada de mediação capaz de facilitar o desenvolvimento, reduzir a complexidade de projetos e garantir um uso mais seguro e eficaz da tecnologia. Esse intermediário pode assumir diversas formas: desde uma interface inteligente que traduza comandos humanos em instruções técnicas, até políticas e práticas que assegurem o uso ético e consciente das inteligências artificiais no processo de criação.
 ...
 
 ## Aplicação
