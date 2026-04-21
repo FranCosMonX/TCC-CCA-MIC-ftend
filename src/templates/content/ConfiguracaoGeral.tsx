@@ -44,7 +44,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
           .then((response) => {
             if (response.status == 200){
               const dados = response.data
-
+              console.log("apareceu aqui")
               reset({
                 diretorio: dados.diretorio,
                 nomeDoProjeto: dados.nome_projeto
@@ -63,6 +63,9 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
               console.log(response)
             }
           })
+        .catch((e) => {
+          console.log(e)
+        })
       }
       req()
       setConfigGerIni(true)

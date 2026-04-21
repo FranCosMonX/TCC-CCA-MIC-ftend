@@ -8,7 +8,7 @@ interface MyBodyParams {
 const MyBody: React.FC<MyBodyParams> = ({ children }) => {
   return (
     <Container disableGutters maxWidth={'xl'} sx={{
-      width: '100vw', 
+      minWidth: '100vw', 
       height: '100vh', 
       backgroundColor: 'white', 
       color: 'black',
