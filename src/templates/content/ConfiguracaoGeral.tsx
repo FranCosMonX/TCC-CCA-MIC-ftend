@@ -15,7 +15,13 @@ interface ConfiguracaoGeralParams {
 const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openMensagemSistema}) => {
   const [confGerIni, setConfigGerIni] = React.useState(false)
   const [modalOpen, setModalOpen] = React.useState(true)
-  const [iasmodels, setIasModels] = React.useState("")
+
+  const [iasConhecidas, setIasConhecidas] = React.useState<{aux_map_key:number, nome_ia:string}[]>([])
+  const [modelosDisponiveis, setModelosDisponiveis] = React.useState<{id:number,nome_ia:string,modelo_disponivel:string}[]>([])
+
+  const [iaName, setIAName] = React.useState("")
+  const [modeloSelecionado, setModeloSelecionado] = React.useState("")
+
   const [apiKey, setApiKey] = React.useState<{error:boolean, helperText:string, value: string}>({
     error:false, helperText:"", value: ""
   })
@@ -23,6 +29,29 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
   const [mostraCodigo, setMoostraCodigo] = React.useState(false)
   const [explica, setExplica] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+
+  const request_modelos_disponiveis = async () => {
+    await api.get(`/ias/nome/${iaName}`)
+      .then((response) => {
+        if (response.status == 200){
+          const dados: {nome_ia:string,id:number,modelo_disponivel:string}[] = response.data.modelos
+          
+          if (dados === null){
+            console.error("Dados nulos ou incorretos")
+            return
+          }
+          setModelosDisponiveis(dados)
+          
+        } else {
+          console.error("A resposta foi recebida, mas houve um erro ao receber os dados")
+        }
+      })
+      .catch(() => {
+        // console.error("DEBUG - ",error)
+        setModeloSelecionado("")
+        setModelosDisponiveis([])
+      })
+    }
   
   const {
     register,
@@ -39,49 +68,75 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
 
   React.useEffect(() => {
     if(!confGerIni){
-      const req = async () => {
+      const request_ias_conhecidas = async () => {
+        await api.get('/ias')
+          .then((response) => {
+            if(response.status == 200){
+              const dados = response.data
+
+              setIasConhecidas(dados)
+            }else{
+              console.error("A resposta foi recebida, mas houve um erro ao receber os dados")
+            }
+          })
+      }
+      const request_usuario = async () => {
         await api.get('/configuracao')
           .then((response) => {
             if (response.status == 200){
               const dados = response.data
-              console.log("apareceu aqui")
-              reset({
-                diretorio: dados.diretorio,
-                nomeDoProjeto: dados.nome_projeto
-              })
 
+              reset({
+                diretorio: dados.diretorio != null ? dados.diretorio : "",
+                nomeDoProjeto: dados.nome_projeto != null ? dados.nome_projeto : ""
+              })
+                
               // Atualiza estados manuais direto com dados
-              setApiKey({ error: false, helperText: "", value: dados.key_ai_api })
+              if (dados.key_ai_api !== null){
+                setApiKey({
+                  error: false,
+                  helperText: "",
+                  value: dados.key_ai_api
+                })}
+              if (dados.nome_ia !== null){
+                setIAName(dados.nome_ia)}
+              if (dados.modelo_disponivel != null){
+                setModeloSelecionado(dados.modelo_disponivel)}
               setExplica(dados.comentario_codigo)
               setMoostraCodigo(dados.ver_codigo)
-              setIasModels(dados.ia)
-
-              reset({
-                diretorio: dados.diretorio,
-                nomeDoProjeto: dados.nome_projeto
-              })
-              console.log(response)
+            }else {
+              console.error("A resposta foi recebida, mas houve um erro ao receber os dados")
             }
           })
-        .catch((e) => {
-          console.log(e)
-        })
+        // .catch((e) => {
+        //   console.log(e)
+        // })
       }
-      req()
+      request_ias_conhecidas()
+      request_usuario()
       setConfigGerIni(true)
     }
   }, [confGerIni])
 
+  React.useEffect(() => {
+    request_modelos_disponiveis()
+  }, [iaName])
+
+  const handleChangeIas = (event: SelectChangeEvent) => {
+    setIAName(event.target.value);
+  }
+
   const handleChangeIasModels = (event: SelectChangeEvent) => {
-    setIasModels(event.target.value);
+    setModeloSelecionado(event.target.value)
   }
 
   const handleVerificarConexao = async () => {
     setLoading(true)
     console.log(loading)
+    
     await api.post('/verificaConexao', 
-      {ia:iasmodels, key_ai_api: apiKey.value},
-      {timeout: 10000})
+      {ia:iaName, key_ai_api: apiKey.value, modelo: modeloSelecionado},
+      {timeout: 15000})
       .then(() => {
         setStatusApiKey("success")
         setApiKey((prev) => ({
@@ -214,17 +269,35 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                 error={!!errors.diretorio}
                 helperText={errors.diretorio?.message}
               />
-              <FormControl>
+              <FormControl sx={{gap: "10px"}}>
                 <Typography>Inteligência Artificial a ser utilizada</Typography>
                 <Select
-                  value={iasmodels}
-                  onChange={handleChangeIasModels}
+                  value={iaName}
+                  onChange={handleChangeIas}
                   displayEmpty
                 >
                   <MenuItem value="">Selecione uma IA</MenuItem>
-                  <MenuItem value="Germini">Germini</MenuItem>
+                  {iasConhecidas.map((elem) => {
+                    return (
+                      <MenuItem key={elem.aux_map_key} value={elem.nome_ia}>{elem.nome_ia}</MenuItem>
+                    )
+                  })}
                 </Select>
               </FormControl>
+              {modelosDisponiveis.length > 0 && <FormControl sx={{gap: "10px"}}>
+                <Select
+                  value={modeloSelecionado}
+                  onChange={handleChangeIasModels}
+                  displayEmpty
+                  >
+                    <MenuItem value={9999999}>Selecione o Modelo</MenuItem>
+                    {modelosDisponiveis.map((elem) => {
+                      return (
+                        <MenuItem key={elem.id} value={elem.modelo_disponivel}>{elem.modelo_disponivel}</MenuItem>
+                      )
+                    })}
+                  </Select>
+              </FormControl>}
               <Box display={'flex'} gap={'10px'} alignItems={"flex-start"} >
                 <TextField
                   label="Chave de acesso à API"

@@ -21,7 +21,8 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
         await api.get('/configuracao')
           .then((response) => {
             const dataResponse = response.data
-            setMicrocontrolador(dataResponse.microcontrolador);
+            if (dataResponse.microcontrolador != null)
+              setMicrocontrolador(dataResponse.microcontrolador);
             setStatusAmbiente("Ambiente já configurado.")
           })
       }
@@ -54,7 +55,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
     setLoading(true)
     await api.post('/configuracaoMicrocontrolador',
       {microcontrolador: microcontrolador, id_microcontrolador: idMiC},
-      {timeout: 60000})
+      {timeout: 120000})
       .then((response) => {
         openMensagemSistema(response.data.mensagem)
         closeModal()

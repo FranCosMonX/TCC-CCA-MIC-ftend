@@ -51,7 +51,7 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
 
   const onSubmit: SubmitHandler<IntroducaoFormData> = async (data) => {
     setLoading(true)
-    await api.post('/usuario', {'usuario': data.apelido}, {timeout: 30000})
+    await api.post('/usuario', {'usuario': data.apelido}, {timeout: 120000})
       .then(() => {
         irParaChat_funcion();
       })

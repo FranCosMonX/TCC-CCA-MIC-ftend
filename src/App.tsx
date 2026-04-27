@@ -157,7 +157,7 @@ const Inicio = () => {
         }}
         alternativaFalseCallback={async () => {
           setLoadUsername(true)
-          await api.post('/RemoverConfiguracao',{}, {timeout: 20000})
+          await api.delete('/RemoverConfiguracao',{timeout: 20000})
             .then((response) => {
               abrir_msg_sistema_Callback(response.data.mensagem)
             })
