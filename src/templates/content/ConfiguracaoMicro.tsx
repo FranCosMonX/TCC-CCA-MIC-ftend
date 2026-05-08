@@ -9,7 +9,7 @@ interface ConfiguracaoMicroParams {
 
 const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, openMensagemSistema }) => {
   const [configMicInicializado, setConfigMicInicializado] = React.useState(false);
-  const [modalOpen, setModalOpen] = React.useState(true);
+  const [modalOpen, setModalOpen] = React.useState(false);
   const [microcontrolador, setMicrocontrolador] = React.useState("");
   const [idMiC, setIdMic] = React.useState("");
   const [loading, setLoading] = React.useState(false)
@@ -25,6 +25,7 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
               setMicrocontrolador(dataResponse.microcontrolador);
             setStatusAmbiente("Ambiente já configurado.")
           })
+          .finally(() => setModalOpen(true))
       }
   
       carregarDados()

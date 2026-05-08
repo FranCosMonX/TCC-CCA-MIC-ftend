@@ -14,7 +14,7 @@ interface ConfiguracaoGeralParams {
 
 const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openMensagemSistema}) => {
   const [confGerIni, setConfigGerIni] = React.useState(false)
-  const [modalOpen, setModalOpen] = React.useState(true)
+  const [modalOpen, setModalOpen] = React.useState(false)
 
   const [iasConhecidas, setIasConhecidas] = React.useState<{aux_map_key:number, nome_ia:string}[]>([])
   const [modelosDisponiveis, setModelosDisponiveis] = React.useState<{id:number,nome_ia:string,modelo_disponivel:string}[]>([])
@@ -111,6 +111,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
         // .catch((e) => {
         //   console.log(e)
         // })
+          .finally(() => setModalOpen(true))
       }
       request_ias_conhecidas()
       request_usuario()
