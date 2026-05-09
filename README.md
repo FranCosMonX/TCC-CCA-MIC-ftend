@@ -50,6 +50,8 @@ O frontend foi desenvolvido utilizando:
 
 A interface é responsável por permitir que o usuário configure parâmetros do projeto, selecione a Inteligência Artificial desejada e acompanhe o desenvolvimento do código gerado.
 
+> O backend pode ser encontrado em [https://github.com/FranCosMonX/TCC-CCA-MIC-BKend](https://github.com/FranCosMonX/TCC-CCA-MIC-BKend)
+
 ---
 
 # Requisitos Mínimos
