@@ -2,11 +2,11 @@ import { Box, Button, TextareaAutosize } from "@mui/material";
 import MyContainer from "../MyContainer";
 import PlayForWorkIcon from '@mui/icons-material/PlayForWork';
 import SendIcon from '@mui/icons-material/Send';
-import MicIcon from '@mui/icons-material/Mic';
 import React, { useEffect } from "react"
 import MsgChatSistema from "./chat/MsgChatSistema";
 import MsgChatUsuario from "./chat/MsjChatUsuario";
 import api from "../../api/api";
+import AssemblyTranscricao from "./audio/Record";
 
 interface ChatParams {
   openMensagemSistema: (msg:string) => void;
@@ -122,7 +122,7 @@ const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema}) => {
           <Button type="submit" variant="outlined" title="Enviar Mensagem" onClick={() => setTimeout(() => {
             setInputMensagem('');
           }, 100)}><SendIcon /></Button>
-          <Button variant="outlined" title="Gravar" onClick={() => openMensagemSistema("Funcionalidade ainda esta em desenvolvimento")}><MicIcon fontSize="large" /></Button>
+          <AssemblyTranscricao obterTextoTranscrito={(textoTranscrito) => setInputMensagem(textoTranscrito)}/>
           <Button variant="contained" title="Compilar e Gravar"><PlayForWorkIcon fontSize="large" /></Button>
         </Box>
       </Box>

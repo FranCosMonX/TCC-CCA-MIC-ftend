@@ -104,7 +104,6 @@ const AssemblyTranscricao: React.FC<AssemblyTranscricaoParams> = ({obterTextoTra
     <React.Fragment>
       {!gravando && <Button variant="outlined" title="Gravar" onClick={gravar}><MicIcon fontSize="large" /></Button>}
       {gravando && <Button variant="outlined" title="Gravar" onClick={parar}><StopIcon fontSize="large" /></Button>}
-      <p>{texto}</p>
     </React.Fragment>
   );
 };
