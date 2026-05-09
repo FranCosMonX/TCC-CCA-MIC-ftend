@@ -18,7 +18,7 @@ interface InterfaceRegistroDeMensagem{
   index: number;
 }
 
-const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema}) => {
+const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
   const [contador, setContador] = React.useState(0)
   const [inputMensagem, setInputMensagem] = React.useState("")
   const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([])

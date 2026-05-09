@@ -1,46 +1,160 @@
-<div align='justify'>
+<div align="justify">
 
-# CCA MIC - Construtor de Códigos para Microcontroladores
+# CCA MIC — Construtor de Códigos Automáticos para Microcontroladores
 
-Na busca por ferramentas, várias pessoas procuram meios de conseguir construir uma aplicação direcionada para seus problemas pessoais, sejam eles voltados para casa ou trabalho. Entretanto, as ferramentas encontradas são mais direcionadas para quem tem estudo na área, principalmente quando se fala em construir sistemas embarcados usando microcontroladores para serviços repetidos ou inteligentes (uso de AI ou vários sensores) que não precisam de interação com seres humanos.
+O **CCA MIC** (Construtor de Códigos Automáticos para Microcontroladores) é uma aplicação desenvolvida com o objetivo de auxiliar usuários no desenvolvimento de sistemas embarcados utilizando Inteligência Artificial. A proposta do projeto é reduzir a complexidade envolvida na criação, compilação e gravação de códigos para microcontroladores, permitindo que tanto iniciantes quanto profissionais da área possam desenvolver soluções de forma mais prática e eficiente.
 
-O Construtor de Códigos Automáticos para Microcontroladores (CCA MIC) não só atende essas pessoas, como, também, profissionais da área. Isso porque a aplicação pode construir códigos que o programador já sabe fazer mas que demanda muito tempo ferindo seus planos de negócios ou atrasando features. Isso, para muitos é desnecessário, pois teria uma InteligÊncia Artigicial (AI) para gerar o código, mas ela não compilará e gravará no microcontrolador que estaria conectado ao computador local do usuário.
+Atualmente, muitas ferramentas voltadas para sistemas embarcados exigem conhecimentos avançados em programação, eletrônica e configuração de ambientes de desenvolvimento. Isso acaba dificultando o acesso de usuários que desejam apenas automatizar tarefas do cotidiano ou criar aplicações específicas para casa, estudos ou trabalho.
 
-## Inteligência Artificial
+Nesse contexto, o CCA MIC atua como uma camada intermediária entre o usuário e os serviços de Inteligência Artificial, automatizando etapas repetitivas do desenvolvimento e simplificando o fluxo de criação de projetos embarcados.
 
-A Inteligência Artificial (IA) é um campo da ciência da computação que desenvolve sistemas capazes de realizar tarefas que normalmente exigiriam inteligência humana. Isso inclui o reconhecimento de padrões, a aprendizagem com dados (machine learning), a tomada de decisões, a geração de linguagem natural e a automação de processos. Em outras palavras, a IA busca criar máquinas que pensem, aprendam e ajam de forma autônoma ou assistida, simulando aspectos do raciocínio humano.
+---
 
-Notoriamente, o uso de IA tem se destacado nos últimos anos. A cada novo aplicativo ou site lançado, é comum haver alguma integração com essa tecnologia — seja para otimizar tarefas, automatizar processos ou oferecer respostas rápidas ao usuário, evitando longas pesquisas em navegadores. No ambiente de trabalho, a IA desempenha um papel fundamental quando o tema é agilidade e produtividade. Dependendo da área, é possível utilizá-la para gerar resultados mais elaborados e eficientes. No entanto, em algumas profissões, o uso irrestrito de IA pode ser problemático, especialmente quando envolve dados pessoais ou informações sensíveis, já que muitas ferramentas utilizam esses dados para o próprio treinamento — algo previsto em seus termos de uso e muitas vezes ignorado pelos usuários. Profissões como advocacia, consultoria autônoma ou gestão de dados exigem cuidado redobrado nesse aspecto. Para desenvolvedores de software, a IA representa uma ferramenta de apoio valiosa, desde que usada com discernimento. Ela pode ajudar a otimizar o tempo, organizar códigos e detectar vulnerabilidades, mas não deve substituir o conhecimento técnico do profissional. Quando usada de forma excessiva ou incorreta, pode gerar dependência e prejudicar o aprendizado.
+# Inteligência Artificial
 
-Atualmente, muitos desenvolvedores têm recorrido à IA para gerar aplicações completas, em vez de utilizá-la como instrumento de aprendizado. Isso acaba criando um efeito colateral: o tempo de consolidação dos projetos aumenta, e a correção de erros se torna mais difícil, especialmente quando ocorrem após a entrega ao cliente — já que o programador pode não compreender a fundo o código produzido pela IA. Diante desse cenário, torna-se evidente a necessidade de um intermediário entre o desenvolvedor e a IA — uma espécie de agente ou camada de mediação capaz de facilitar o desenvolvimento, reduzir a complexidade de projetos e garantir um uso mais seguro e eficaz da tecnologia. Esse intermediário pode assumir diversas formas: desde uma interface inteligente que traduza comandos humanos em instruções técnicas, até políticas e práticas que assegurem o uso ético e consciente das inteligências artificiais no processo de criação.
-...
+A Inteligência Artificial (IA) é um campo da Ciência da Computação voltado para o desenvolvimento de sistemas capazes de executar tarefas que normalmente exigiriam inteligência humana. Entre essas tarefas estão:
 
-## Aplicação
+- Reconhecimento de padrões;
+- Aprendizado com dados (*Machine Learning*);
+- Processamento de linguagem natural;
+- Tomada de decisões;
+- Automação de processos.
 
-A aplicação conta com uma interface simples para os usuários de forma a não guardar dados pessoais dos mesmos. Tal interface foi desenvolvida usando React + vite com componentes da MaterialUI e validação de campos usando HookForms + Zod.
+Nos últimos anos, a IA passou a fazer parte de diversos aplicativos e plataformas, sendo utilizada para aumentar produtividade, automatizar tarefas e auxiliar usuários em diferentes contextos.
 
-### Requisitos Mínimos
+No desenvolvimento de software, a IA pode ser uma ferramenta extremamente útil para:
 
-A preparação do ambiente de execução da aplicação depende muito do `Node.js` e da aplicação `backend` responsável por atender os pedidos do usuário, ser o intermediário entre o usuário e outros serviços de terceiros como a Google ou OpenAI (Germini, ChatGPT) e compilar e gravar o código fonte no microcontrolador do usuário.
+- Gerar trechos de código;
+- Detectar vulnerabilidades;
+- Automatizar tarefas repetitivas;
+- Acelerar processos de desenvolvimento;
+- Organizar estruturas de projetos.
 
-Dessa forma, o usuário deve fazer o seguinte checklist para poder usar esta aplicação:
+Entretanto, o uso excessivo ou inadequado dessas ferramentas pode gerar dependência tecnológica e dificultar a compreensão do código produzido. Além disso, algumas plataformas de IA utilizam informações fornecidas pelos usuários para treinamento de modelos, o que pode representar riscos quando dados pessoais ou sensíveis estão envolvidos.
 
-1. Estar com backend baixado e configurado;
-2. Estar com o frontend (este repositório) baixado e configurado;
-    > Instalar o Node.js e gerenciador de pacotes PNPM
-3. Ter uma conta criada no serviço de terceiros suportados até a versão atual da aplicação;
-4. Ter uma chave de acesso para o uso da API da aplicação de terceiros.
+O CCA MIC busca justamente minimizar esses problemas ao atuar como intermediário entre o usuário e os serviços de IA, proporcionando um ambiente mais controlado para geração de aplicações embarcadas.
 
-#### Sistema Operacional (SO) suportado
+---
 
-Nessas primeiras versões, a aplicação só terá suporte para S.O. do Windows 10 e 11 devido a configurações do backend simplificado.
+# Aplicação
 
-### Uso da aplicação
+A aplicação possui uma interface simples e objetiva, desenvolvida para facilitar a interação do usuário sem armazenar informações pessoais.
 
-Para utilizar a aplicação, deve-se definir alguns parâmetros, como a AI a ser utilizada e chave para acessar seus serviços e configurações do microcontrolador.
+O frontend foi desenvolvido utilizando:
 
-#### Limitações
+- React;
+- Vite;
+- Material UI;
+- React Hook Form;
+- Zod.
 
-A aplicação não será responsável por salvar as interações com o usuário. Ou seja, é bom anotar bem o que foi mencionado durante a conversa e aprender já que a aplicação foi desenvolvida para auxiliar o ser humano, sendo este capaz de manipular qualquer informação construída ou desenvolvida durante as conversas.
+A interface é responsável por permitir que o usuário configure parâmetros do projeto, selecione a Inteligência Artificial desejada e acompanhe o desenvolvimento do código gerado.
+
+---
+
+# Requisitos Mínimos
+
+Para executar corretamente a aplicação, é necessário possuir:
+
+- Node.js instalado;
+- Gerenciador de pacotes `pnpm`;
+- Backend do CCA MIC configurado e em execução;
+- Conta em um dos serviços de IA suportados;
+- Chave de API válida para acesso ao serviço escolhido.
+
+## Checklist Inicial
+
+Antes de utilizar o sistema, certifique-se de que:
+
+1. O backend do CCA MIC está baixado e configurado;
+2. O frontend deste repositório foi baixado corretamente;
+3. O Node.js e o `pnpm` estão instalados;
+4. Existe uma conta ativa em um serviço de IA compatível;
+5. A chave de API do serviço escolhido está configurada.
+
+---
+
+# Sistemas Operacionais Suportados
+
+Atualmente, as primeiras versões da aplicação possuem suporte oficial apenas para:
+
+- Windows 10;
+- Windows 11.
+
+Essa limitação existe devido às configurações simplificadas utilizadas pelo backend durante o desenvolvimento do protótipo acadêmico.
+
+---
+
+# Funcionalidades
+
+Entre as principais funcionalidades da aplicação, destacam-se:
+
+- Comunicação entre usuário e Inteligência Artificial;
+- Geração automática de código para microcontroladores;
+- Preparação do ambiente de desenvolvimento;
+- Geração de arquivos de configuração;
+- Compilação automatizada do projeto;
+- Gravação do código no microcontrolador via USB;
+- Interface simplificada para interação com IA.
+
+---
+
+# Limitações
+
+Por se tratar de um protótipo acadêmico, algumas limitações ainda estão presentes:
+
+- A aplicação não salva conversas ou histórico de interações;
+- Não existem mecanismos robustos de segurança implementados;
+- O sistema depende de serviços externos de IA;
+- O suporte oficial está limitado ao Windows.
+
+Por esse motivo, recomenda-se que o usuário mantenha registro das informações importantes geradas durante o uso da aplicação.
+
+---
+
+# Configuração do Ambiente
+
+## Instalação das Dependências
+
+Com o `Node.js` e o `pnpm` instalados, abra o terminal no diretório do projeto — onde se encontra o arquivo `index.html` — e execute:
+
+```console
+pnpm install
+```
+
+---
+
+# Configuração do Arquivo `.env`
+
+Antes de iniciar a aplicação, é necessário configurar as variáveis de ambiente.
+
+1. Copie o arquivo `.env-example`;
+2. Cole o arquivo no mesmo diretório;
+3. Renomeie a cópia para `.env`.
+
+Depois disso, configure:
+
+- A URL da API do backend do CCA MIC;
+- A chave da API da AssemblyAI utilizada para transcrição de áudio.
+
+---
+
+# Execução da Aplicação
+
+Após concluir as etapas anteriores, execute o seguinte comando para iniciar o frontend em modo de desenvolvimento:
+
+```console
+pnpm run dev
+```
+
+O modo de desenvolvimento é recomendado para testes e utilização durante o desenvolvimento da aplicação.
+
+---
+
+# Objetivo do Projeto
+
+O CCA MIC foi desenvolvido como protótipo de Trabalho de Conclusão de Curso (TCC), tendo como principal objetivo investigar formas de integrar Inteligência Artificial ao desenvolvimento de sistemas embarcados de maneira acessível, prática e segura.
+
+A proposta central do projeto é permitir que usuários possam desenvolver aplicações embarcadas sem a necessidade de configurar manualmente ambientes complexos ou possuir conhecimentos avançados sobre microcontroladores e compilação de código.
 
 </div>
