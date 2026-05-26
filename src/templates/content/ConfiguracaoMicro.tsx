@@ -7,42 +7,45 @@ interface ConfiguracaoMicroParams {
   openMensagemSistema: (msg:string) => void;
 }
 
+interface MicrocontroladorConf {
+  fqbn: string
+  nome: string
+  ambiente_configurado: boolean
+  id: number
+}
+
 const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, openMensagemSistema }) => {
   const [configMicInicializado, setConfigMicInicializado] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [microcontrolador, setMicrocontrolador] = React.useState("");
-  const [idMiC, setIdMic] = React.useState("");
   const [loading, setLoading] = React.useState(false)
-  const [statusAmbiente, setStatusAmbiente] = React.useState("Será necessário verificar")
-  
+  const [microcontroladoresDisponiveis, setMicrocontroladoresDisponiveis] = React.useState<MicrocontroladorConf[]>([])
+  const [microcontroladorSelecionado, setMicrocontroladorSelecionado] = React.useState<MicrocontroladorConf>({fqbn: '', nome: '', id: -1, ambiente_configurado: false})
+
   React.useEffect(() => {
     if(!configMicInicializado){
       const carregarDados = async () => {
         await api.get('/configuracao')
           .then((response) => {
             const dataResponse = response.data
-            if (dataResponse.microcontrolador != null)
-              setMicrocontrolador(dataResponse.microcontrolador);
-            setStatusAmbiente("Ambiente já configurado.")
+            
+            if (dataResponse.id_microcontrolador != null)
+              setMicrocontrolador(dataResponse.id_microcontrolador);
           })
           .finally(() => setModalOpen(true))
       }
   
       carregarDados()
+      get_microcontroladores()
       setConfigMicInicializado(true)
     }
   }, [configMicInicializado])
 
   React.useEffect(() => {
-    const lista_ESP = ['ESP 32 NodeMCU']
-    const lista_ARDUINO = ['Arduino UNO R3', 'Arduino ATMega 328p']
-
-    if(lista_ESP.includes(microcontrolador)){
-      setIdMic('arduino:esp32')
-    }else if(lista_ARDUINO.includes(microcontrolador)){
-      setIdMic('arduino:avr')
-    }else{
-      setIdMic('Nenhum - escolha não reconhecida')
+    for (let mic of microcontroladoresDisponiveis) {
+      if (mic.id == parseInt(microcontrolador)){
+        setMicrocontroladorSelecionado(mic)
+      }
     }
   }, [microcontrolador])
 
@@ -55,8 +58,8 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
 
     setLoading(true)
     await api.post('/configuracaoMicrocontrolador',
-      {microcontrolador: microcontrolador, id_microcontrolador: idMiC},
-      {timeout: 120000})
+      {id_microcontrolador: microcontroladorSelecionado.id},
+      {timeout: 5*60000})//5 minutos
       .then((response) => {
         openMensagemSistema(response.data.mensagem)
         closeModal()
@@ -77,6 +80,20 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
       })
       .finally(() => {
         setLoading(false)
+      })
+  }
+
+  const get_microcontroladores = async () => {
+    api.get('/microcontrolador')
+      .then((response) => {
+        if (response.status == 200){
+          const listaMics = response?.data?.Microcontroladores
+          if (listaMics != null && listaMics != undefined){
+            setMicrocontroladoresDisponiveis(listaMics)
+          }
+        }
+      }).catch(() => {
+        setMicrocontroladoresDisponiveis([])
       })
   }
 
@@ -124,9 +141,14 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
                 <MenuItem value="">
                   <em>Nenhum</em>
                 </MenuItem>
-                <MenuItem value="ESP 32 NodeMCU">ESP 32 NodeMCU</MenuItem>
+                {microcontroladoresDisponiveis.map((mic) => {
+                  return (
+                    <MenuItem key={mic.id} value={mic.id}>{mic.nome}</MenuItem>
+                  )
+                })}
+                {/* <MenuItem value="ESP 32 NodeMCU">ESP 32 NodeMCU</MenuItem>
                 <MenuItem value="Arduino UNO R3">Arduino UNO R3</MenuItem>
-                <MenuItem value="Arduino ATMega 328p">Arduino ATMega 328p</MenuItem>
+                <MenuItem value="Arduino ATMega 328p">Arduino ATMega 328p</MenuItem> */}
               </Select>
             </FormControl>
             <Divider />
@@ -134,13 +156,13 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
               microcontrolador !== "" && 
               <Box display={"flex"} flexDirection={'column'} gap={'0.5px'}>
                 <Typography fontFamily={"inherit"} variant="h6">
-                  Microcontrolador: <Typography component={'span'} fontWeight={'bold'} >{microcontrolador}</Typography>
+                  Microcontrolador: <Typography component={'span'} fontWeight={'bold'} >{microcontroladorSelecionado.nome} de ID={microcontroladorSelecionado.id}</Typography>
                 </Typography>
                 <Typography fontFamily={"inherit"} variant="h6">
-                  Identificador: <Typography component={'span'} fontWeight={'bold'} >{idMiC}</Typography>
+                  Identificador: <Typography component={'span'} fontWeight={'bold'} >{microcontroladorSelecionado.fqbn}</Typography>
                 </Typography>
                 <Typography fontFamily={"inherit"} variant="h6">
-                  Drives instalados: <Typography component={'span'} fontWeight={'bold'} >{statusAmbiente}</Typography>
+                  Drives instalados: <Typography component={'span'} fontWeight={'bold'} >{microcontroladorSelecionado.ambiente_configurado ? "Ambiente já configurado." : "Ambiente não configurado."}</Typography>
                 </Typography>
               </Box>
             }

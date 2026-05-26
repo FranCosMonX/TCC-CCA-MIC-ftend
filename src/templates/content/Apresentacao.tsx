@@ -52,8 +52,16 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
   const onSubmit: SubmitHandler<IntroducaoFormData> = async (data) => {
     setLoading(true)
     await api.post('/usuario', {'usuario': data.apelido}, {timeout: 120000})
-      .then(() => {
-        irParaChat_funcion();
+      .then(async() => {
+        await api.post('/IniciarChat')
+          .then((response) => {
+            if (response.status == 200){
+              irParaChat_funcion()
+            }
+          })
+          .catch(() => {
+            openMensagemSistema("Houve um problema ao iniciar o chat.")
+          })
       })
       .catch((responseError) => {
         if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){

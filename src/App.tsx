@@ -116,7 +116,7 @@ const Inicio = () => {
   return (
     <MyBody>
       <MyMenu>
-        <MenuItem onClick={() => {
+        <MenuItem disabled={!eInicio} onClick={() => {
           setOpenModals({
             configGeral: true,
             configMicrocontrolador: false
@@ -129,7 +129,7 @@ const Inicio = () => {
         }, ':onclick': {
           background: 'none'
         }}}><Avatar src="./public/Logo.png"/></MenuItem>
-        <MenuItem onClick={() => {
+        <MenuItem disabled={!eInicio} onClick={() => {
           setOpenModals({
             configGeral: false,
             configMicrocontrolador: true

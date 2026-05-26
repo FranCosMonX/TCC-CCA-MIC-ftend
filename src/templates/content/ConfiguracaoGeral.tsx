@@ -12,12 +12,18 @@ interface ConfiguracaoGeralParams {
   openMensagemSistema: (msg:string) => void;
 }
 
+interface ModeloDisponivel{
+  id:number;
+  nome_ia:string;
+  modelo_disponivel:string;
+}
+
 const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openMensagemSistema}) => {
   const [confGerIni, setConfigGerIni] = React.useState(false)
   const [modalOpen, setModalOpen] = React.useState(false)
 
   const [iasConhecidas, setIasConhecidas] = React.useState<{aux_map_key:number, nome_ia:string}[]>([])
-  const [modelosDisponiveis, setModelosDisponiveis] = React.useState<{id:number,nome_ia:string,modelo_disponivel:string}[]>([])
+  const [modelosDisponiveis, setModelosDisponiveis] = React.useState<ModeloDisponivel[]>([])
 
   const [iaName, setIAName] = React.useState("")
   const [modeloSelecionado, setModeloSelecionado] = React.useState("")
@@ -120,7 +126,9 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
   }, [confGerIni])
 
   React.useEffect(() => {
-    request_modelos_disponiveis()
+    if (confGerIni){
+      request_modelos_disponiveis()
+    }
   }, [iaName])
 
   const handleChangeIas = (event: SelectChangeEvent) => {
@@ -135,7 +143,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
     setLoading(true)
     console.log(loading)
     
-    await api.post('/verificaConexao', 
+    await api.post('/ia/verificaConexao', 
       {ia:iaName, key_ai_api: apiKey.value, modelo: modeloSelecionado},
       {timeout: 15000})
       .then(() => {
@@ -291,7 +299,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   onChange={handleChangeIasModels}
                   displayEmpty
                   >
-                    <MenuItem value={9999999}>Selecione o Modelo</MenuItem>
+                    <MenuItem value={""}>Selecione o Modelo</MenuItem>
                     {modelosDisponiveis.map((elem) => {
                       return (
                         <MenuItem key={elem.id} value={elem.modelo_disponivel}>{elem.modelo_disponivel}</MenuItem>
