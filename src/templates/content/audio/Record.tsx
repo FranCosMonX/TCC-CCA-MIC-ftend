@@ -12,7 +12,7 @@ const AssemblyTranscricao: React.FC<AssemblyTranscricaoParams> = ({obterTextoTra
   const [texto, setTexto] = useState("");
   const [gravando, setGravando] = useState(false)
   const [recorder, setRecorder] = useState<MediaRecorder>()
-  const API_KEY = import.meta.env.VITE_KEY_ASSEMBLY_AI; // coloque sua chave aqui
+  const API_KEY = import.meta.env.VITE_KEY_ASSEMBLY_AI;
 
   const enviarAudio = async (audioBlob: Blob) => {
     try {
@@ -65,7 +65,7 @@ const AssemblyTranscricao: React.FC<AssemblyTranscricaoParams> = ({obterTextoTra
 
   const gravar = async () => {
     setGravando(true)
-    console.log("funcao gravar acionada")
+    // console.log("funcao gravar acionada")
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     setRecorder(new MediaRecorder(stream));
   };
@@ -78,7 +78,7 @@ const AssemblyTranscricao: React.FC<AssemblyTranscricaoParams> = ({obterTextoTra
   }
 
   useEffect(() => {
-    console.log("record alterado")
+    // console.log("record alterado")
     if(recorder != undefined && recorder != null){
       const chunks: BlobPart[] = [];
 
@@ -89,12 +89,11 @@ const AssemblyTranscricao: React.FC<AssemblyTranscricaoParams> = ({obterTextoTra
       };
 
       recorder.start();
-      // setTimeout(() => {recorder.stop();setGravando(false);}, 10000); // grava 5 segundos
     }
   }, [recorder])
 
   useEffect(() => {
-    console.log(texto)
+    // console.log(texto)
     if(!gravando){
       obterTextoTranscrito(texto);
     }

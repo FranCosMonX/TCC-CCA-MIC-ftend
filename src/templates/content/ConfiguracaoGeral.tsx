@@ -119,8 +119,8 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
         // })
           .finally(() => setModalOpen(true))
       }
-      request_ias_conhecidas()
       request_usuario()
+      request_ias_conhecidas()
       setConfigGerIni(true)
     }
   }, [confGerIni])

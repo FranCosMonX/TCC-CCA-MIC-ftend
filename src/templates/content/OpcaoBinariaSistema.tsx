@@ -2,7 +2,7 @@ import { Box, Button, Card, Modal, Typography } from "@mui/material"
 import React from "react";
 
 interface MensagemSistemaParams {
-  closeModal: () => void;
+  closeModal?: () => void;
   alternaticaTrueCallback: () => void;
   alternativaFalseCallback: () => void;
   textBtnFalse: string;
@@ -37,12 +37,12 @@ const OpcaoBinariaSistema: React.FC<MensagemSistemaParams> = ({ closeModal, mens
         <Box display={"flex"} justifyContent={'space-around'} width={'100%'}>
           <Button variant="outlined" onClick={() => {
             alternativaFalseCallback();
-            closeModal()
+            if (closeModal !== undefined) closeModal()
             setModalOpen(false)
           }}>{textBtnFalse}</Button>
           <Button variant="contained" onClick={() => {
             alternaticaTrueCallback();
-            closeModal()
+            if (closeModal !== undefined) closeModal()
             setModalOpen(false)
           }}>{textBtnTrue}</Button>
         </Box>

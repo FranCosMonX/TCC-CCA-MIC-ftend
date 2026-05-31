@@ -10,24 +10,39 @@ import api from "../../api/api";
 import AssemblyTranscricao from "./audio/Record";
 import { blueGrey, grey } from "@mui/material/colors";
 import MsgChatIA from "./chat/MsgChatIA";
+import OpcaoBinariaSistema from "./OpcaoBinariaSistema";
 
 interface ChatParams {
   openMensagemSistema: (msg:string) => void;
+  tem_dados_salvos: boolean;
 }
 
 interface InterfaceRegistroDeMensagem{
   entidade: 'usuario' | 'sistema' | 'ia';
   mensagem: string;
-  index: number;
+  id: number;
 }
 
-const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
+const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema,tem_dados_salvos}) => {
   const [contador, setContador] = React.useState(0)
   const [inputMensagem, setInputMensagem] = React.useState("")
   const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([])
   const [modoMic, setModoMic] = React.useState<boolean>(false)
   const [estagiosMic, setEstagiosMic] = React.useState<'inicial' | 'intermediario' | 'final'>('inicial')
   const [esperandoResposta, setEsperandoResposta] = React.useState(false)
+  const [conversaExiste, setConversaExiste] = React.useState<{abrir_msg_sys: boolean, existe:boolean}>({
+    existe: tem_dados_salvos ? tem_dados_salvos != undefined || tem_dados_salvos : false, abrir_msg_sys: false
+  })
+
+  useEffect(() => {
+    if(conversaExiste.existe){
+      setEsperandoResposta(true)
+      setConversaExiste({
+        ...conversaExiste,
+        abrir_msg_sys:true
+      })
+    }
+  }, [conversaExiste.existe])
 
   useEffect(() => {
     const verUltimaMensagem = document.querySelector(".chatArea");
@@ -42,7 +57,7 @@ const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
       {
         entidade: entidade,
         mensagem: mensagem,
-        index: index
+        id: index
       }
     ])
   }
@@ -60,9 +75,15 @@ const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
       await api.post('/chat', {'mensagem': inputMensagem}, {timeout: 60000})
         .then((e) => {
           setTimeout(() => {
-            addMsgNoHistorico(cont + 1, "ia", e.data.mensagem)
+            addMsgNoHistorico(cont + 2, "ia", e.data.mensagem)
             setEstagiosMic('inicial')
           }, 100)
+        })
+        .catch((error) => {
+          if (error.response.status == 400){
+            openMensagemSistema(error.response.mensagem)
+          }
+
         })
         .finally(() => setEsperandoResposta(false))
         
@@ -77,15 +98,26 @@ const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
     setEsperandoResposta(true)
     await api.post('/gerar', null, {timeout:3*60000})
       .then((response) => {
-        if (response.status == 200){
+        if (response.status == 200 || response.status ==202){
           const resposta : string = response.data.mensagem
           addMsgNoHistorico(cont + 1, "sistema", resposta.length > 0 ? resposta : "Arquivos gerados com sucesso.")
           setEstagiosMic('intermediario')
+        } else {
+          addMsgNoHistorico(cont + 1, "sistema", `Erro ao gerar o arquivo. ${response.data.mensagem}`)
         }
       })
-      .finally(() => setEsperandoResposta(false))
-    
-    setContador((prev) => prev + 1);
+      .catch((error) => {
+        if (error.response.status < 500){
+          const resposta : string = error.response.data.mensagem
+          addMsgNoHistorico(cont + 1, "sistema", resposta.length > 0 ? resposta : "Houve um problema ao gerar o arquivo.")
+        } else {
+          addMsgNoHistorico(cont + 1, "sistema", `Houve um problema ao gerar o arquivo. ${error.response.data.mensagem}`)
+        }
+      })
+      .finally(() => {
+        setEsperandoResposta(false)
+        setContador((prev) => prev + 1);
+      })
   }
 
   const handleCompilarProjeto = async () => {
@@ -97,11 +129,22 @@ const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
           const resposta: string = response.data.mensagem
           addMsgNoHistorico(cont + 1, "sistema", resposta.length > 0 ? resposta : "Projeto compilado com sucesso")
           setEstagiosMic('final')
+        } else {
+          addMsgNoHistorico(cont + 1, "sistema", `Houve um problema ao compilar o arquivo. ${response.data.mensagem}`)
         }
       })
-      .finally(() => setEsperandoResposta(false))
-
-    setContador((prev) => prev + 1);
+      .catch((error) => {
+        if (error.response.status < 500){
+          const resposta : string = error.response.data.mensagem
+          addMsgNoHistorico(cont + 1, "sistema", resposta.length > 0 ? resposta : "Houve um problema ao compilar o arquivo.")
+        } else {
+          addMsgNoHistorico(cont + 1, "sistema", `Houve um problema ao compilar o arquivo. ${error.response.data.mensagem}`)
+        }
+      })
+      .finally(() => {
+        setEsperandoResposta(false)
+        setContador((prev) => prev + 1);
+      })
   }
 
   const handleGravarCodigo = async () => {
@@ -114,9 +157,18 @@ const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
           addMsgNoHistorico(cont + 1, "sistema", resposta.length > 0 ? resposta : "Código gravado com sucesso.")
         }
       })
-      .finally(() => setEsperandoResposta(false))
-
-    setContador((prev) => prev + 1);
+      .catch((error) => {
+        if (error.response.status < 500){
+          const resposta : string = error.response.data.mensagem
+          addMsgNoHistorico(cont + 1, "sistema", resposta.length > 0 ? resposta : "Houve um problema ao gravar o código no microcoontrolador.")
+        } else {
+          addMsgNoHistorico(cont + 1, "sistema", `Houve um problema ao gravar o código no microcoontrolador. ${error.response.data.mensagem}`)
+        }
+      })
+      .finally(() => {
+        setEsperandoResposta(false)
+        setContador((prev) => prev + 1);
+      })
   }
 
   return (
@@ -145,9 +197,9 @@ const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
       }}>
         {mensagens.map((mensagem) => {
           const retorno = mensagem.entidade === 'sistema' ?
-            <MsgChatSistema key={mensagem.index} text={mensagem.mensagem} /> :
-              mensagem.entidade === 'ia' ? <MsgChatIA key={mensagem.index} text={mensagem.mensagem} /> :
-              <MsgChatUsuario key={mensagem.index} text={mensagem.mensagem} />
+            <MsgChatSistema key={mensagem.id} text={mensagem.mensagem} /> :
+              mensagem.entidade === 'ia' ? <MsgChatIA key={mensagem.id} text={mensagem.mensagem} /> :
+              <MsgChatUsuario key={mensagem.id} text={mensagem.mensagem} />
             return retorno;
         })}
       </MyContainer>
@@ -207,6 +259,57 @@ const Pagina_de_chat: React.FC<ChatParams> = (/*{openMensagemSistema}*/) => {
           </Box>
         }
       </Box>
+      {
+        conversaExiste.abrir_msg_sys &&
+        <OpcaoBinariaSistema 
+          alternaticaTrueCallback={async() => {
+            await api.get('/chat/historico')
+              .then((response) => {
+                if (response.status == 200){
+                  setConversaExiste({
+                    ...conversaExiste,
+                    abrir_msg_sys:false
+                  })
+                  const dados: InterfaceRegistroDeMensagem[] = response.data.registro
+
+                  const conversas_chat = [];
+                  for(const registro of dados){
+                    if (registro.entidade === "ia" || registro.entidade === "usuario")
+                      conversas_chat.push(registro)
+                  }
+                  
+                  if (conversas_chat.length == 0){
+                    openMensagemSistema("Não há mensagens salvas.")
+                    return
+                  }
+
+                  setContador(conversas_chat[conversas_chat.length-1].id)
+                  setMensagens(conversas_chat)
+
+                }
+              })
+              .catch((error) => {console.error(error)})
+              .finally(() => setEsperandoResposta(false))
+          }}
+          alternativaFalseCallback={async () => {
+            await api.delete('/chat/remover/tudo')
+              .then((response) => {
+                if (response.status == 200){
+                  setConversaExiste({
+                    ...conversaExiste,
+                    abrir_msg_sys:false
+                  })
+                  openMensagemSistema("Histórico apagado com êxito.")
+                }
+              })
+              .catch((error) => {console.error(error)})
+              .finally(() => setEsperandoResposta(false))
+          }}
+          mensagemSistema="Deseja continuar mantendo o histórico da última conversa?"
+          textBtnFalse="Não"
+          textBtnTrue="Sim"
+        />
+      }
     </Box>
   )
 }

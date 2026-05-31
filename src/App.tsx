@@ -26,7 +26,7 @@ const Inicio = () => {
   const [openModals, setOpenModals] = React.useState<{configGeral: boolean, configMicrocontrolador: boolean}>({
     configGeral : false, configMicrocontrolador : false
   })
-  const [dadosExistem, setDadosExistem] = React.useState(false)
+  const [dadosExistem, setDadosExistem] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     if (apiInicializada < 1){
@@ -37,8 +37,12 @@ const Inicio = () => {
             if (response.status == 200)
               setDadosExistem(true)
           })
-          .catch(() => {
-            abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.")
+          .catch((responseError) => {
+            if (responseError.response.status == 400){
+              abrir_msg_sistema_Callback(responseError.response.data.mensagem)
+            }else{
+              abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.\n\nDetalhes: " + responseError.response.data.mensagem)
+            }
           })
       }
       
@@ -137,7 +141,7 @@ const Inicio = () => {
         }}><MemoryIcon sx={{fontSize: '40px'}} /></MenuItem>
       </MyMenu>
       {!
-        eInicio && <Pagina_de_chat openMensagemSistema={abrir_msg_sistema_Callback}/>
+        eInicio && <Pagina_de_chat openMensagemSistema={abrir_msg_sistema_Callback} tem_dados_salvos={dadosExistem} />
       }
       {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback} load={loadUsername}/>}
       {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem}/>}
@@ -164,7 +168,10 @@ const Inicio = () => {
             .catch((responseError) => {
               abrir_msg_sistema_Callback(responseError.response.data.mensagem)
             })
-            .finally(() => setLoadUsername(false))
+            .finally(() => {
+              setLoadUsername(false)
+              setDadosExistem(false)
+            })
         }}
         mensagemSistema={opcaoBinariaSistema.mensagem}
         textBtnFalse={opcaoBinariaSistema.textFalse}

@@ -32,21 +32,47 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
             if (dataResponse.id_microcontrolador != null)
               setMicrocontrolador(dataResponse.id_microcontrolador);
           })
+          .catch((error) => {
+            openMensagemSistema(error.response.data.mensagem)
+          })
           .finally(() => setModalOpen(true))
       }
+
+      const get_microcontroladores = async () => {
+        api.get('/microcontrolador')
+          .then((response) => {
+            if (response.status == 200){
+              const listaMics = response?.data?.Microcontroladores
+              if (listaMics != null && listaMics != undefined){
+                setMicrocontroladoresDisponiveis(listaMics)
+              }
+            } else 
+              openMensagemSistema(response.data.mensagem)
+          }).catch((error)=> {
+            if (!error.response.data)
+              openMensagemSistema("Erro interno do sistema.")
+            else
+              openMensagemSistema(error.response.data.mensagem)
+            setMicrocontroladoresDisponiveis([])
+          })
+      }
   
-      carregarDados()
       get_microcontroladores()
-      setConfigMicInicializado(true)
+      carregarDados()
+      setTimeout(() => {
+        setConfigMicInicializado(true)
+      }, 25);
     }
   }, [configMicInicializado])
 
   React.useEffect(() => {
-    for (let mic of microcontroladoresDisponiveis) {
-      if (mic.id == parseInt(microcontrolador)){
-        setMicrocontroladorSelecionado(mic)
+    setTimeout(() => {
+      for (let mic of microcontroladoresDisponiveis) {
+        if (mic.id == parseInt(microcontrolador)){
+          setMicrocontroladorSelecionado(mic)
+        }
       }
-    }
+    }, 25);
   }, [microcontrolador])
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
@@ -80,20 +106,6 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
       })
       .finally(() => {
         setLoading(false)
-      })
-  }
-
-  const get_microcontroladores = async () => {
-    api.get('/microcontrolador')
-      .then((response) => {
-        if (response.status == 200){
-          const listaMics = response?.data?.Microcontroladores
-          if (listaMics != null && listaMics != undefined){
-            setMicrocontroladoresDisponiveis(listaMics)
-          }
-        }
-      }).catch(() => {
-        setMicrocontroladoresDisponiveis([])
       })
   }
 
@@ -146,9 +158,6 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
                     <MenuItem key={mic.id} value={mic.id}>{mic.nome}</MenuItem>
                   )
                 })}
-                {/* <MenuItem value="ESP 32 NodeMCU">ESP 32 NodeMCU</MenuItem>
-                <MenuItem value="Arduino UNO R3">Arduino UNO R3</MenuItem>
-                <MenuItem value="Arduino ATMega 328p">Arduino ATMega 328p</MenuItem> */}
               </Select>
             </FormControl>
             <Divider />
