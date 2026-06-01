@@ -53,34 +53,38 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
             })
         } catch (e){}
       }
-      req()
       setApresentacaoIniciada((prev) => (prev+1))
+      setTimeout(() => {
+        req()
+      }, 500);
     }
   }, [apresentacaoIniciada])
 
   const onSubmit: SubmitHandler<IntroducaoFormData> = async (data) => {
     setLoading(true)
-    await api.post('/usuario', {'usuario': data.apelido}, {timeout: 120000})
-      .then(async() => {
-        await api.post('/IniciarChat')
-          .then((response) => {
-            if (response.status == 200){
-              irParaChat_funcion()
-            }
-          })
-          .catch(() => {
-            openMensagemSistema("Houve um problema ao iniciar o chat.")
-          })
-      })
-      .catch((responseError) => {
-        if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
-          openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
-          return
-        }
-        
-        setError('apelido', {message: 'Houve um erro ao mudar o nome de usuário'})
-      })
-      .finally(() => setLoading(false))
+    try {
+      await api.post('/usuario', {'usuario': data.apelido}, {timeout: 120000})
+        .then(async() => {
+          await api.post('/IniciarChat')
+            .then((response) => {
+              if (response.status == 200){
+                irParaChat_funcion()
+              }
+            })
+            .catch(() => {
+              openMensagemSistema("Houve um problema ao iniciar o chat.")
+            })
+        })
+        .catch((responseError) => {
+          if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
+            openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
+            return
+          }
+          
+          setError('apelido', {message: 'Houve um erro ao mudar o nome de usuário'})
+        })
+        .finally(() => setLoading(false))
+    } catch (e){}
   }
 
   return (
