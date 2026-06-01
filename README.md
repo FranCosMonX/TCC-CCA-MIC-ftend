@@ -120,6 +120,8 @@ Por esse motivo, recomenda-se que o usuário mantenha registro das informações
 
 Com o `Node.js` e o `pnpm` instalados, abra o terminal no diretório do projeto — onde se encontra o arquivo `index.html` — e execute:
 
+> Caso o pnpm não esteja instalado, instale usando o comando `npm install -g pnpm`.
+
 ```console
 pnpm install
 ```
