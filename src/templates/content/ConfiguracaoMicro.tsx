@@ -4,7 +4,7 @@ import api from "../../api/api";
 
 interface ConfiguracaoMicroParams {
   closeModal: () => void;
-  openMensagemSistema: (msg:string) => void;
+  openMensagemSistema: (msg:string, links?: string[]) => void;
 }
 
 interface MicrocontroladorConf {
@@ -25,17 +25,22 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
   React.useEffect(() => {
     if(!configMicInicializado){
       const carregarDados = async () => {
-        await api.get('/configuracao')
-          .then((response) => {
-            const dataResponse = response.data
-            
-            if (dataResponse.id_microcontrolador != null)
-              setMicrocontrolador(dataResponse.id_microcontrolador);
-          })
-          .catch((error) => {
-            openMensagemSistema(error.response.data.mensagem)
-          })
-          .finally(() => setModalOpen(true))
+        try{
+          await api.get('/configuracao')
+            .then((response) => {
+              const dataResponse = response.data
+              
+              if (dataResponse.id_microcontrolador != null)
+                setMicrocontrolador(dataResponse.id_microcontrolador);
+            })
+            .catch((error) => {
+              openMensagemSistema(error.response.data.mensagem)
+            })
+            .finally(() => setModalOpen(true))
+        } catch (e){
+          openMensagemSistema("Houve um problema na conexão com o Sistema Interno. Verifique se o backend está conectado e tente novamente (recarregue a página).", ["https://github.com/FranCosMonX/TCC-CCA-MIC-BKend"])
+          closeModal()
+        }
       }
 
       const get_microcontroladores = async () => {

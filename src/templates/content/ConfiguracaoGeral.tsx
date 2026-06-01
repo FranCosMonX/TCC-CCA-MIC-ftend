@@ -9,7 +9,7 @@ import api from "../../api/api";
 
 interface ConfiguracaoGeralParams {
   closeModal: () => void;
-  openMensagemSistema: (msg:string) => void;
+  openMensagemSistema: (msg:string, links?: string[]) => void;
 }
 
 interface ModeloDisponivel{
@@ -87,37 +87,42 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
           })
       }
       const request_usuario = async () => {
-        await api.get('/configuracao')
-          .then((response) => {
-            if (response.status == 200){
-              const dados = response.data
-
-              reset({
-                diretorio: dados.diretorio != null ? dados.diretorio : "",
-                nomeDoProjeto: dados.nome_projeto != null ? dados.nome_projeto : ""
-              })
-                
-              // Atualiza estados manuais direto com dados
-              if (dados.key_ai_api !== null){
-                setApiKey({
-                  error: false,
-                  helperText: "",
-                  value: dados.key_ai_api
-                })}
-              if (dados.nome_ia !== null){
-                setIAName(dados.nome_ia)}
-              if (dados.modelo_disponivel != null){
-                setModeloSelecionado(dados.modelo_disponivel)}
-              setExplica(dados.comentario_codigo)
-              setMoostraCodigo(dados.ver_codigo)
-            }else {
-              console.error("A resposta foi recebida, mas houve um erro ao receber os dados")
-            }
-          })
-        // .catch((e) => {
-        //   console.log(e)
-        // })
-          .finally(() => setModalOpen(true))
+        try {
+          await api.get('/configuracao')
+            .then((response) => {
+              if (response.status == 200){
+                const dados = response.data
+  
+                reset({
+                  diretorio: dados.diretorio != null ? dados.diretorio : "",
+                  nomeDoProjeto: dados.nome_projeto != null ? dados.nome_projeto : ""
+                })
+                  
+                // Atualiza estados manuais direto com dados
+                if (dados.key_ai_api !== null){
+                  setApiKey({
+                    error: false,
+                    helperText: "",
+                    value: dados.key_ai_api
+                  })}
+                if (dados.nome_ia !== null){
+                  setIAName(dados.nome_ia)}
+                if (dados.modelo_disponivel != null){
+                  setModeloSelecionado(dados.modelo_disponivel)}
+                setExplica(dados.comentario_codigo)
+                setMoostraCodigo(dados.ver_codigo)
+              }else {
+                console.error("A resposta foi recebida, mas houve um erro ao receber os dados")
+              }
+            })
+          // .catch((e) => {
+          //   console.log(e)
+          // })
+            .finally(() => setModalOpen(true))
+        } catch (e){
+          openMensagemSistema("Houve um problema na conexão com o Sistema Interno. Verifique se o backend está conectado e tente novamente (recarregue a página).", ["https://github.com/FranCosMonX/TCC-CCA-MIC-BKend"])
+          closeModal()
+        }
       }
       request_usuario()
       request_ias_conhecidas()
@@ -160,7 +165,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
         }))
         }, 1500)
       }).catch((responseError) => {
-        if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
+        if (responseError.response.status >= 500 || !responseError.request || !responseError.response?.data){
           openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
           
           closeModal()

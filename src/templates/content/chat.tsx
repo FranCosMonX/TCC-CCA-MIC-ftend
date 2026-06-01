@@ -13,7 +13,7 @@ import MsgChatIA from "./chat/MsgChatIA";
 import OpcaoBinariaSistema from "./OpcaoBinariaSistema";
 
 interface ChatParams {
-  openMensagemSistema: (msg:string) => void;
+  openMensagemSistema: (msg:string, links?: string[]) => void;
   tem_dados_salvos: boolean;
 }
 

@@ -33,16 +33,25 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
   React.useEffect(() => {
     if(apresentacaoIniciada < 1){
       const req = async () => {
-        await api.get('/configuracao')
-          .then((response) => {
-            if (response.status == 200){
-              const dados = response.data
-
-              reset({
-                apelido: dados.apelido
-              })
-            }
-          })
+        try {
+          await api.get('/configuracao')
+            .then((response) => {
+              if (response.status == 200){
+                const dados = response.data
+  
+                reset({
+                  apelido: dados.apelido
+                })
+              }
+            })
+            .catch((error) => {
+              if (error.response.status >= 500 || !error.request || !error.response?.data){
+                openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
+              } else {
+                openMensagemSistema(error.response.data.mensagem)
+              }
+            })
+        } catch (e){}
       }
       req()
       setApresentacaoIniciada((prev) => (prev+1))
@@ -102,7 +111,7 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
             justifyContent={'center'}
           >
             {loading && <CircularProgress /> }
-            {!loading && <Button variant="contained" type="submit" >Prosseguir</Button>}
+            {!loading && <Button title="Começar a conversar" variant="contained" type="submit" >Prosseguir</Button>}
           </Box>
       </MyContainer>
     </form>

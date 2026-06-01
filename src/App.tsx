@@ -17,8 +17,8 @@ const Inicio = () => {
   const [eInicio, setEInicio] = React.useState(true);
   const [apiInicializada, setApiInicializada] = React.useState(0)
   const [loadUsername, setLoadUsername] = React.useState(false)
-  const [mensagemSistema, setMensagemSistema] = React.useState<{ativo: boolean, mensagem: string}>({
-    ativo: false, mensagem: ''
+  const [mensagemSistema, setMensagemSistema] = React.useState<{ativo: boolean, mensagem: string, links?: string[]}>({
+    ativo: false, mensagem: '', links: undefined
   })
   const [opcaoBinariaSistema, setOpcaoBinariaSistema] = React.useState<{ativo: boolean, mensagem: string, textTrue: string, textFalse: string}>({
     ativo: false, mensagem: '', textTrue: '', textFalse:''
@@ -31,19 +31,23 @@ const Inicio = () => {
   React.useEffect(() => {
     if (apiInicializada < 1){
       const handle_api_iniciar = async () => {
-        await api.get('/init', {timeout: 30000})
-          .then((response) => {
-            if (response.status == 204) return
-            if (response.status == 200)
-              setDadosExistem(true)
-          })
-          .catch((responseError) => {
-            if (responseError.response.status == 400){
-              abrir_msg_sistema_Callback(responseError.response.data.mensagem)
-            }else{
-              abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.\n\nDetalhes: " + responseError.response.data.mensagem)
-            }
-          })
+        try{
+          await api.get('/init', {timeout: 30000})
+            .then((response) => {
+              if (response.status == 204) return
+              if (response.status == 200)
+                setDadosExistem(true)
+            })
+            .catch((responseError) => {
+              if (responseError.response.status == 400){
+                abrir_msg_sistema_Callback(responseError.response.data.mensagem)
+              }else{
+                abrir_msg_sistema_Callback("Houve um erro ao tentar se conectar com o sistema, por favor, tente novamente mais tarde.\n\nDetalhes: " + responseError.response.data.mensagem)
+              }
+            })
+        } catch (e){
+          abrir_msg_sistema_Callback("Houve um problema na conexão com o Sistema Interno. Verifique se o backend está conectado e tente novamente (recarregue a página).", ["https://github.com/FranCosMonX/TCC-CCA-MIC-BKend"])
+        }
       }
       
       handle_api_iniciar()
@@ -87,13 +91,15 @@ const Inicio = () => {
 
   const fechar_msg_sistema_Callback = () => {
     setMensagemSistema({
+      links: undefined,
       mensagem: "",
       ativo: false
     })
   }
 
-  const abrir_msg_sistema_Callback = (msg: string) => {
+  const abrir_msg_sistema_Callback = (msg: string, links?: string[]) => {
     setMensagemSistema({
+      links: links,
       mensagem: msg,
       ativo: true
     })
@@ -120,20 +126,20 @@ const Inicio = () => {
   return (
     <MyBody>
       <MyMenu>
-        <MenuItem disabled={!eInicio} onClick={() => {
+        <MenuItem title="Configurações Gerais" disabled={!eInicio} onClick={() => {
           setOpenModals({
             configGeral: true,
             configMicrocontrolador: false
           })
         }}><SettingsIcon sx={{fontSize: '40px'}} /></MenuItem>
-        <MenuItem onClick={() => {
+        <MenuItem title="Voltar ao Inicio" onClick={() => {
           setEInicio(true)
         }} sx={{':hover':{
           background: 'none'
         }, ':onclick': {
           background: 'none'
         }}}><Avatar src="./public/Logo.png"/></MenuItem>
-        <MenuItem disabled={!eInicio} onClick={() => {
+        <MenuItem title="Configurações do Microcontrolador" disabled={!eInicio} onClick={() => {
           setOpenModals({
             configGeral: false,
             configMicrocontrolador: true
@@ -144,7 +150,7 @@ const Inicio = () => {
         eInicio && <Pagina_de_chat openMensagemSistema={abrir_msg_sistema_Callback} tem_dados_salvos={dadosExistem} />
       }
       {eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback} load={loadUsername}/>}
-      {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem}/>}
+      {mensagemSistema.ativo && <MensagemSistema closeModal={fechar_msg_sistema_Callback} mensagemSistema={mensagemSistema.mensagem} links={mensagemSistema.links}/>}
       {handle_model()}
       { opcaoBinariaSistema.ativo && <OpcaoBinariaSistema 
         closeModal={fechar_alternativa_callback}
