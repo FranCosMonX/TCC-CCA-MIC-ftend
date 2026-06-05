@@ -156,7 +156,7 @@ const Inicio = () => {
         closeModal={fechar_alternativa_callback}
         alternaticaTrueCallback={async () => {
           setLoadUsername(true)
-          await api.post('CarregarConfiguracao',{}, {timeout: 20000})
+          await api.post('/ia/reconectar',{}, {timeout: 20000})
           .then((response) => {
             abrir_msg_sistema_Callback(response.data.mensagem)
           })
