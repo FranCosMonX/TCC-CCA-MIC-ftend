@@ -71,8 +71,13 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
                 irParaChat_funcion()
               }
             })
-            .catch(() => {
-              openMensagemSistema("Houve um problema ao iniciar o chat.")
+            .catch((responseError) => {
+              if (responseError.status >= 500 || !responseError.request || !responseError.response?.data){
+                openMensagemSistema("Houve um problema com o sistema interno. Tente novamente mais tarde.")
+                return
+              }
+              
+              setError('apelido', {message: responseError.response.data.mensagem})
             })
         })
         .catch((responseError) => {

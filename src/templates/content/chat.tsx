@@ -264,31 +264,38 @@ const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema,tem_dados_sal
         <OpcaoBinariaSistema 
           alternaticaTrueCallback={async() => {
             await api.get('/chat/historico')
-              .then((response) => {
-                if (response.status == 200){
-                  setConversaExiste({
-                    ...conversaExiste,
-                    abrir_msg_sys:false
-                  })
-                  const dados: InterfaceRegistroDeMensagem[] = response.data.registro
+              .then(async (response_hist) => {
+                if (response_hist.status == 200){
+                  await api.post('/ia/carregar_contexto_anterior')
+                    .then((response) => {
+                      if (response.status < 300){
+                        setConversaExiste({
+                          ...conversaExiste,
+                          abrir_msg_sys:false
+                        })
+                        const dados: InterfaceRegistroDeMensagem[] = response_hist.data.registro
 
-                  const conversas_chat = [];
-                  for(const registro of dados){
-                    if (registro.entidade === "ia" || registro.entidade === "usuario")
-                      conversas_chat.push(registro)
-                  }
-                  
-                  if (conversas_chat.length == 0){
-                    openMensagemSistema("Não há mensagens salvas.")
-                    return
-                  }
+                        const conversas_chat = [];
+                        for(const registro of dados){
+                          if (registro.entidade === "ia" || registro.entidade === "usuario")
+                            conversas_chat.push(registro)
+                        }
+                        
+                        if (conversas_chat.length == 0){
+                          openMensagemSistema("Não há mensagens salvas.")
+                          return
+                        }
 
-                  setContador(conversas_chat[conversas_chat.length-1].id)
-                  setMensagens(conversas_chat)
-
+                        setContador(conversas_chat[conversas_chat.length-1].id)
+                        setMensagens(conversas_chat)
+                      }
+                    })
+                    .catch((responseError) => {
+                      openMensagemSistema(responseError.response.data.mensagem)
+                    })
                 }
               })
-              .catch((error) => {console.error(error)})
+              .catch((responseError) => {openMensagemSistema(responseError.response.data.mensagem)})
               .finally(() => setEsperandoResposta(false))
           }}
           alternativaFalseCallback={async () => {
