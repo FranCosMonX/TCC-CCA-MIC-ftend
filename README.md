@@ -126,6 +126,8 @@ Com o `Node.js` e o `pnpm` instalados, abra o terminal no diretório do projeto 
 pnpm install
 ```
 
+Caso haja uma mensagem informando `ERR_PNPM_IGNORED_BUILDS`, use o comando `pnpm approve-builds`, selecione a opção com a tecla *space* e prima Enter.
+
 ---
 
 # Configuração do Arquivo `.env`
@@ -141,6 +143,13 @@ Depois disso, configure:
 - A URL da API do backend do CCA MIC;
 - A chave da API da AssemblyAI utilizada para transcrição de áudio.
 
+Em .env-example contém 2 variáveis: `VITE_API_URL` usada para armazenar a URL em que o Backend está rodando e `VITE_KEY_ASSEMBLY_AI` para ter acesso à funcionalidade de transcrição de áudio.
+
+```txt
+VITE_API_URL=http://{ip}:{porta}/api
+VITE_KEY_ASSEMBLY_AI=API_KEY
+```
+
 ---
 
 # Execução da Aplicação
@@ -152,6 +161,8 @@ pnpm run dev
 ```
 
 O modo de desenvolvimento é recomendado para testes e utilização durante o desenvolvimento da aplicação.
+
+> Note que no backend, quando usar uma funcionalidade, irá chamar um mesmo backend 2 vezes devido ao uso do vite. Isso só acontece em modo de desenvolvimento.
 
 ---
 
