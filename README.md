@@ -8,6 +8,8 @@ Atualmente, muitas ferramentas voltadas para sistemas embarcados exigem conhecim
 
 Nesse contexto, o CCA MIC atua como uma camada intermediária entre o usuário e os serviços de Inteligência Artificial, automatizando etapas repetitivas do desenvolvimento e simplificando o fluxo de criação de projetos embarcados.
 
+Vale citar um tutorial alterativo em [francosmonx.github.io/#/projetos/cca_mic](https://francosmonx.github.io/#/projetos/cca_mic)
+
 ---
 
 # Inteligência Artificial
@@ -58,7 +60,7 @@ A interface é responsável por permitir que o usuário configure parâmetros do
 
 Para executar corretamente a aplicação, é necessário possuir:
 
-- Node.js v22 instalado;
+- Node.js v22 ou superior instalado;
 - Gerenciador de pacotes `pnpm` na versão 11 ou superior;
 - Backend do CCA MIC configurado e em execução;
 - Conta em um dos serviços de IA suportados: Gemini ou ChatGPT;
