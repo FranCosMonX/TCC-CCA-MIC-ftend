@@ -80,12 +80,12 @@ Antes de utilizar o sistema, certifique-se de que:
 
 # Sistemas Operacionais Suportados
 
-Atualmente, as primeiras versões da aplicação possuem suporte oficial apenas para:
+Atualmente, as primeiras versões do sistema CCA Mic possuem suporte oficial apenas para:
 
 - Windows 10 versão 1809 (build 17763) ou posterior;
 - Windows 11.
 
-Essa limitação existe devido às configurações simplificadas utilizadas pelo backend durante o desenvolvimento do protótipo acadêmico, como a instalação do *arduino-cli* caso o mesmo não exista na máquina do usuário que está executando o backend.
+Essa limitação existe devido às configurações simplificadas utilizadas pelo backend durante o desenvolvimento do protótipo acadêmico, como a instalação do *arduino-cli* caso o mesmo não exista na máquina do usuário que está executando o backend. Para mais informações, visite a documentação do repositório do backend.
 
 ---
 
