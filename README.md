@@ -61,7 +61,7 @@ A interface é responsável por permitir que o usuário configure parâmetros do
 Para executar corretamente a aplicação, é necessário possuir:
 
 - Node.js v22 ou superior instalado;
-- Gerenciador de pacotes `pnpm` na versão 11 ou superior;
+- Gerenciador de pacotes `pnpm` na versão 10.17 ou superior;
 - Backend do CCA MIC configurado e em execução;
 - Conta em um dos serviços de IA suportados: Gemini ou ChatGPT;
 - Chave de API válida para acesso ao serviço escolhido.
@@ -72,7 +72,7 @@ Antes de utilizar o sistema, certifique-se de que:
 
 1. O backend do CCA MIC está baixado, configurado e em execução;
 2. O frontend deste repositório foi baixado corretamente;
-3. O Node.js v22+ e o `pnpm` v11+ estão instalados;
+3. O Node.js v22+ e o `pnpm` v10.17+ estão instalados;
 4. Existe uma conta ativa em um serviço de IA compatível: IA (Google/OpenAI) e AssemblyAI;
 5. A chave de API do serviço escolhido está configurada.
 
@@ -119,7 +119,7 @@ Por se tratar de um protótipo acadêmico, algumas limitações ainda estão pre
 
 ## Instalação das Dependências
 
-Com o `Node.js` v22+ e o `pnpm` v11+ instalados, abra o terminal no diretório do projeto — onde se encontra o arquivo `index.html` — e execute:
+Com o `Node.js` v22+ e o `pnpm` v10.17+ instalados, abra o terminal no diretório do projeto — onde se encontra o arquivo `index.html` — e execute:
 
 ```console
 pnpm install
