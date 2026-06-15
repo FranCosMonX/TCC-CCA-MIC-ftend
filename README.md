@@ -58,20 +58,20 @@ A interface é responsável por permitir que o usuário configure parâmetros do
 
 Para executar corretamente a aplicação, é necessário possuir:
 
-- Node.js instalado;
-- Gerenciador de pacotes `pnpm`;
+- Node.js v22 instalado;
+- Gerenciador de pacotes `pnpm` na versão 11 ou superior;
 - Backend do CCA MIC configurado e em execução;
-- Conta em um dos serviços de IA suportados;
+- Conta em um dos serviços de IA suportados: Gemini ou ChatGPT;
 - Chave de API válida para acesso ao serviço escolhido.
 
 ## Checklist Inicial
 
 Antes de utilizar o sistema, certifique-se de que:
 
-1. O backend do CCA MIC está baixado e configurado;
+1. O backend do CCA MIC está baixado, configurado e em execução;
 2. O frontend deste repositório foi baixado corretamente;
-3. O Node.js e o `pnpm` estão instalados;
-4. Existe uma conta ativa em um serviço de IA compatível;
+3. O Node.js v22+ e o `pnpm` v11+ estão instalados;
+4. Existe uma conta ativa em um serviço de IA compatível: IA (Google/OpenAI) e AssemblyAI;
 5. A chave de API do serviço escolhido está configurada.
 
 ---
@@ -80,10 +80,10 @@ Antes de utilizar o sistema, certifique-se de que:
 
 Atualmente, as primeiras versões da aplicação possuem suporte oficial apenas para:
 
-- Windows 10;
+- Windows 10 versão 1809 (build 17763) ou posterior;
 - Windows 11.
 
-Essa limitação existe devido às configurações simplificadas utilizadas pelo backend durante o desenvolvimento do protótipo acadêmico.
+Essa limitação existe devido às configurações simplificadas utilizadas pelo backend durante o desenvolvimento do protótipo acadêmico, como a instalação do *arduino-cli* caso o mesmo não exista na máquina do usuário que está executando o backend.
 
 ---
 
@@ -105,12 +105,11 @@ Entre as principais funcionalidades da aplicação, destacam-se:
 
 Por se tratar de um protótipo acadêmico, algumas limitações ainda estão presentes:
 
-- A aplicação não salva conversas ou histórico de interações;
 - Não existem mecanismos robustos de segurança implementados;
 - O sistema depende de serviços externos de IA;
-- O suporte oficial está limitado ao Windows.
-
-Por esse motivo, recomenda-se que o usuário mantenha registro das informações importantes geradas durante o uso da aplicação.
+- O suporte oficial está limitado ao Windows devido ao uso do Winget;
+  > Para funcionar em maquinas com S.O. Windows mais antigos, é necessário que as ferramentas sejam instaladas manualmente pelo usuário.
+- Perda do projeto criado **com o mesmo nome** do gerado posteriormente.
 
 ---
 
@@ -118,13 +117,13 @@ Por esse motivo, recomenda-se que o usuário mantenha registro das informações
 
 ## Instalação das Dependências
 
-Com o `Node.js` e o `pnpm` instalados, abra o terminal no diretório do projeto — onde se encontra o arquivo `index.html` — e execute:
-
-> Caso o pnpm não esteja instalado, instale usando o comando `npm install -g pnpm`.
+Com o `Node.js` v22+ e o `pnpm` v11+ instalados, abra o terminal no diretório do projeto — onde se encontra o arquivo `index.html` — e execute:
 
 ```console
 pnpm install
 ```
+
+> Caso o **pnpm** não esteja instalado, instale usando o comando `npm install -g pnpm`.
 
 Caso haja uma mensagem informando `ERR_PNPM_IGNORED_BUILDS`, use o comando `pnpm approve-builds`, selecione a opção com a tecla *space* e prima Enter.
 
@@ -150,6 +149,15 @@ VITE_API_URL=http://{ip}:{porta}/api
 VITE_KEY_ASSEMBLY_AI=API_KEY
 ```
 
+Ao incluir a URL, em que o backend está sendo executado, entre **VITE_API_URL=** e **/api**, o conteúdo do arquivo *.env* ficará semelhante ao visto logo a seguir.
+
+```txt
+VITE_API_URL=http://127.0.0.1:5000/api
+VITE_KEY_ASSEMBLY_AI=API_KEY
+```
+
+Ao terminar, salve as alterações e feche o aplicatiivo de usado para o editar.
+
 ---
 
 # Execução da Aplicação
@@ -163,13 +171,5 @@ pnpm run dev
 O modo de desenvolvimento é recomendado para testes e utilização durante o desenvolvimento da aplicação.
 
 > Note que no backend, quando usar uma funcionalidade, irá chamar um mesmo backend 2 vezes devido ao uso do vite. Isso só acontece em modo de desenvolvimento.
-
----
-
-# Objetivo do Projeto
-
-O CCA MIC foi desenvolvido como protótipo de Trabalho de Conclusão de Curso (TCC), tendo como principal objetivo investigar formas de integrar Inteligência Artificial ao desenvolvimento de sistemas embarcados de maneira acessível, prática e segura.
-
-A proposta central do projeto é permitir que usuários possam desenvolver aplicações embarcadas sem a necessidade de configurar manualmente ambientes complexos ou possuir conhecimentos avançados sobre microcontroladores e compilação de código.
 
 </div>
