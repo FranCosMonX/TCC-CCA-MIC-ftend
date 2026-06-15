@@ -8,7 +8,7 @@ Atualmente, muitas ferramentas voltadas para sistemas embarcados exigem conhecim
 
 Nesse contexto, o CCA MIC atua como uma camada intermediária entre o usuário e os serviços de Inteligência Artificial, automatizando etapas repetitivas do desenvolvimento e simplificando o fluxo de criação de projetos embarcados.
 
-Vale citar um tutorial alterativo em [francosmonx.github.io/#/projetos/cca_mic](https://francosmonx.github.io/#/projetos/cca_mic)
+Vale citar um tutorial alterativo em [francosmonx.github.io/#/projetos/tutorial_cca_mic](https://francosmonx.github.io/#/projetos/tutorial_cca_mic)
 
 ---
 
