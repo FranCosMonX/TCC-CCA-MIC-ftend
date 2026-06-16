@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Button, Card, CardContent, CardHeader, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, LinearProgress, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Checkbox, CircularProgress, Divider, FormControl, FormControlLabel, FormGroup, LinearProgress, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import LoopIcon from '@mui/icons-material/Loop';
 import type { SelectChangeEvent } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -265,24 +265,6 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                 gap: '16px'
               }}
             >
-              <TextField
-                label="Nome do projeto"
-                placeholder="Hello World"
-                fullWidth
-                slotProps={{ inputLabel: {shrink: true} }}
-                {...register('nomeDoProjeto')}
-                error={!!errors.nomeDoProjeto}
-                helperText={errors.nomeDoProjeto?.message}
-              />
-              <TextField
-                label="Local de arquivos"
-                placeholder="C:\users\teste\Document\teste"
-                fullWidth
-                slotProps={{ inputLabel: {shrink: true} }}
-                {...register('diretorio')}
-                error={!!errors.diretorio}
-                helperText={errors.diretorio?.message}
-              />
               <FormControl sx={{gap: "10px"}}>
                 <Typography>Inteligência Artificial a ser utilizada</Typography>
                 <Select
@@ -337,6 +319,25 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                   !loading && <Button sx={{height: '56px'}} title="Validar Conexão" color={statusAPIKey} onClick={handleVerificarConexao}><LoopIcon fontSize="large" /></Button>
                 }
               </Box>
+              <Divider sx={{width: '100%'}} />
+              <TextField
+                label="Nome do projeto"
+                placeholder="Hello World"
+                fullWidth
+                slotProps={{ inputLabel: {shrink: true} }}
+                {...register('nomeDoProjeto')}
+                error={!!errors.nomeDoProjeto}
+                helperText={errors.nomeDoProjeto?.message}
+              />
+              <TextField
+                label="Local de arquivos"
+                placeholder="C:\users\teste\Document\teste"
+                fullWidth
+                slotProps={{ inputLabel: {shrink: true} }}
+                {...register('diretorio')}
+                error={!!errors.diretorio}
+                helperText={errors.diretorio?.message}
+              />
               <FormGroup>
                 <FormControlLabel control={<Checkbox checked={mostraCodigo} onChange={
                   (event: React.ChangeEvent<HTMLInputElement>) => {
