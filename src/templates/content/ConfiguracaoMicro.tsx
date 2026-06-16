@@ -153,15 +153,6 @@ const ConfiguracaoMicro: React.FC<ConfiguracaoMicroParams> = ({ closeModal, open
                 id="microcontrolador"
                 onChange={handleChangeMicrocontrolador}
                 displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 48 * 5,
-                      minHeight: 48 * 3,
-                    },
-                  },
-                }}
               >
                 <MenuItem value="">
                   <em>Nenhum</em>

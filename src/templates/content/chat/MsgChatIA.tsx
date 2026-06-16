@@ -17,7 +17,7 @@ const MsgChatIA: React.FC<MsgChatIAParams> = ({text}) => {
           whiteSpace: 'normal',
           wordBreak: 'break-word',
           overflowWrap: 'break-word',
-          backgroundColor: green[200]
+          backgroundColor: green[300]
         }}
       />
     </React.Fragment>
