@@ -345,7 +345,7 @@ const ConfiguracaoGeral: React.FC<ConfiguracaoGeralParams> = ({closeModal, openM
                 <FormControlLabel control={<Checkbox checked={explica} onChange={
                   (event: React.ChangeEvent<HTMLInputElement>) => {
                     setExplica(event.target.checked);
-                  }} />} label="Explicar o código."/>
+                  }} />} label="Adicionar comentários no código."/>
               </FormGroup>
               {
                 loading &&
