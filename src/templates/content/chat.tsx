@@ -3,7 +3,7 @@ import MyContainer from "../MyContainer";
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import SendIcon from '@mui/icons-material/Send';
 import AppsOutageIcon from '@mui/icons-material/AppsOutage';
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import MsgChatSistema from "./chat/MsgChatSistema";
 import MsgChatUsuario from "./chat/MsjChatUsuario";
 import api from "../../api/api";
@@ -24,6 +24,7 @@ interface InterfaceRegistroDeMensagem{
 }
 
 const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema,tem_dados_salvos}) => {
+  const [init, setInit] = useState(true)
   const [contador, setContador] = React.useState(0)
   const [inputMensagem, setInputMensagem] = React.useState("")
   const [mensagens, setMensagens] = React.useState<Array<InterfaceRegistroDeMensagem>>([])
@@ -35,8 +36,9 @@ const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema,tem_dados_sal
   })
 
   useEffect(() => {
-    if(conversaExiste.existe){
+    if(init){
       setEsperandoResposta(true)
+      setInit(false)
       const verifica_conversa = async () => {
         await api.get('/chat/registro/conversa_usuario')
         .then((response) => {
@@ -47,14 +49,19 @@ const Pagina_de_chat: React.FC<ChatParams> = ({openMensagemSistema,tem_dados_sal
               abrir_msg_sys:true,
               existe: true
             })
-          }else{
-            setEsperandoResposta(false)
+          }else {
+            setConversaExiste({
+              ...conversaExiste,
+              abrir_msg_sys:false,
+              existe: false
+            })
           }
         })
+        .finally(() => setEsperandoResposta(false))
       }
       verifica_conversa()
     }
-  }, [conversaExiste.existe])
+  }, [init])
 
   useEffect(() => {
     const verUltimaMensagem = document.querySelector(".chatArea");
