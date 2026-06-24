@@ -103,7 +103,13 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          gap: '16px'
+          gap: '16px',
+          backgroundImage: 'url(logo.png)',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '100px',
+          backgroundPositionY: 'top',
+          backgroundPositionX: 'center',
+          opacity: '70%'
         }}
         >
           <Typography variant="h4" textAlign={"center"}>Como gostaria de ser chamado?</Typography>
@@ -120,7 +126,7 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
             justifyContent={'center'}
           >
             {loading && <CircularProgress /> }
-            {!loading && <Button title="Começar a conversar" variant="contained" type="submit" >Prosseguir</Button>}
+            {!loading && <Button title="Começar a conversar"  variant="contained" type="submit" sx={{fontSize: '1.2em'}}>Prosseguir</Button>}
           </Box>
       </MyContainer>
     </form>

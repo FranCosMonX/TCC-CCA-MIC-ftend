@@ -130,20 +130,23 @@ const Inicio = () => {
             configGeral: true,
             configMicrocontrolador: false
           })
-        }}><SettingsIcon sx={{fontSize: '40px'}} /></MenuItem>
-        <MenuItem title="Voltar ao Inicio" onClick={() => {
-          setEInicio(true)
-        }} sx={{':hover':{
-          background: 'none'
-        }, ':onclick': {
-          background: 'none'
-        }}}><Avatar src="./public/Logo.png"/></MenuItem>
+        }}><SettingsIcon sx={{fontSize: '40px', backgroundColor: "rgb(0, 102, 204)", color: 'white', padding: '5px 20px', borderRadius: '9px'}} /></MenuItem>
+        {
+          !eInicio &&
+          <MenuItem title="Voltar ao Inicio" onClick={() => {
+            setEInicio(true)
+          }} sx={{':hover':{
+            background: 'none'
+          }, ':onclick': {
+            background: 'none'
+          }}}><Avatar sx={{width: '2.3em', height: '2.3em'}} src="./public/Logo.png"/></MenuItem>
+        }
         <MenuItem title="Configurações do Microcontrolador" disabled={!eInicio} onClick={() => {
           setOpenModals({
             configGeral: false,
             configMicrocontrolador: true
           })
-        }}><MemoryIcon sx={{fontSize: '40px'}} /></MenuItem>
+        }}><MemoryIcon sx={{fontSize: '40px', backgroundColor: "rgb(0, 102, 204)", color: 'white', padding: '5px 20px', borderRadius: '9px'}} /></MenuItem>
       </MyMenu>
       {!
         eInicio && <Pagina_de_chat openMensagemSistema={abrir_msg_sistema_Callback} tem_dados_salvos={dadosExistem} />
