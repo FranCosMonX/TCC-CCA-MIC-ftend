@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Avatar, MenuItem } from "@mui/material";
 import ConfiguracaoGeral from "./templates/content/ConfiguracaoGeral";
 import ConfiguracaoMicro from "./templates/content/ConfiguracaoMicro";
@@ -15,6 +15,7 @@ import './App.css'
 
 const Inicio = () => {
   const [eInicio, setEInicio] = React.useState(true);
+  const [mensagemIntroducao, setMensagemIntrocao] = React.useState(false);
   const [apiInicializada, setApiInicializada] = React.useState(0)
   const [loadUsername, setLoadUsername] = React.useState(false)
   const [mensagemSistema, setMensagemSistema] = React.useState<{ativo: boolean, mensagem: string, links?: string[]}>({
@@ -27,6 +28,14 @@ const Inicio = () => {
     configGeral : false, configMicrocontrolador : false
   })
   const [dadosExistem, setDadosExistem] = React.useState<boolean>(false)
+
+  useEffect(() => {
+    if (dadosExistem){
+      setMensagemIntrocao(false)
+    } else if  (eInicio && !dadosExistem){
+      setMensagemIntrocao(true)
+    }
+  }, [dadosExistem])
 
   React.useEffect(() => {
     if (apiInicializada < 1){
@@ -150,6 +159,16 @@ const Inicio = () => {
       </MyMenu>
       {!
         eInicio && <Pagina_de_chat openMensagemSistema={abrir_msg_sistema_Callback} tem_dados_salvos={dadosExistem} />
+      }
+      {
+        mensagemIntroducao && 
+        <MensagemSistema 
+          closeModal={() => setMensagemIntrocao(false)} 
+          mensagemSistema="Antes de iniciar, defina as configurações de conexão e de projeto no canto superior esquerdo e, depois, escolher o microcontrolador localizado no canto superior direito. Somente com estas definições, é possível acessar o sistema."
+          links={
+            ['https://francosmonx.github.io/#/projetos/tutorial_cca_mic']
+          }
+        />
       }
       {
         eInicio && <Apresentacao irParaChat_funcion={abrir_chat_callback} openMensagemSistema={abrir_msg_sistema_Callback}load={loadUsername} />

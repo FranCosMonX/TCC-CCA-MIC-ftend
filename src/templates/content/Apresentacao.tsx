@@ -104,7 +104,7 @@ const Apresentacao: React.FC<ApresentacaoParams> = ({irParaChat_funcion, openMen
           justifyContent: 'center',
           alignItems: 'center',
           gap: '16px',
-          backgroundImage: 'url(logo.png)',
+          backgroundImage: 'url(public/logo.png)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: '100px',
           backgroundPositionY: 'top',
